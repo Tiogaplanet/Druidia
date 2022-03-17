@@ -1,4 +1,6 @@
-# Welcome to Evennia!
+# Welcome to Druidia, a MUD built with Evennia.
+
+Do not expect anything here.  This is just something I'm playing with.  -Tiogaplanet
 
 This is your game directory, set up to let you start with
 your new game right away. An overview of this directory is found here:
