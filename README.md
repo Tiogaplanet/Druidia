@@ -2,6 +2,8 @@
 
 Do not expect anything here.  This is just something I'm playing with.  -Tiogaplanet
 
+Is this thing on?
+
 This is your game directory, set up to let you start with
 your new game right away. An overview of this directory is found here:
 https://github.com/evennia/evennia/wiki/Directory-Overview#the-game-directory
