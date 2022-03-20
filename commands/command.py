@@ -187,16 +187,19 @@ class Command(BaseCommand):
 #             else:
 #                 self.character = None
 
+
 from evennia import default_cmds
 class CmdWhistle(default_cmds.MuxCommand):
     """
-    Simple command example
+    Whistle a little tune.
 
     Usage:
       whistle
 
-    This command simply echoes text back to the caller.
+    The character whistles a cheerful little tune.
     """
+
+    aliases = ["wh", "whi", "whis", "whist", "whistl"]
 
     key = "whistle"
 
