@@ -1,53 +1,37 @@
 #
-# Evennia batchfile - tutorial_world
+# Evennia batchfile - Druidia
 #
-# Griatch 2011, 2015
+# Tiogaplanet 2022
 #
-# This batchfile sets up a starting tutorial area for Evennia.
-#
-# This uses the custom script parents and code snippets found in the
-# same folder as this script; Note that we are not using any
-# modifications of the default player character at all (so you don't
-# have to change anything in any settings files). We also don't modify
-# any of the default command functions (except in states). So bear in
-# mind that the full flexibility of Evennia is not used to its maximum
-# potential here.
+# This batchfile sets up Druidia.
 #
 # To load this file, place yourself in Limbo (room #2) and load the
 # file as user #1 with
 #
-#     @batchcommand contrib.tutorial_world.build
+#     @batchcommand world.batch_cmds
 #
 # If you give the /interactive switch you can step through the
 # build process command for command.
 #
 # The area we are building looks like this:
 #
-#     ? 03,04
-#     |
-# +---+----+    +-------------------+    +--------+   +--------+
-# |        |    |                   |    |gate    |   |corner  |
-# | cliff  +----+   05 bridge       +----+  09    +---+   11   |
-# |   02   |    |                   |    |        |   |        |
-# +---+----+    +---------------+---+    +---+----+   +---+----+
-#     |    \                    |            |   castle   |
-#     |     \  +--------+  +----+---+    +---+----+   +---+----+
-#     |      \ |under-  |  |ledge   |    |wall    |   |court-  |
-#     |       \|ground  +--+  06    |    |  10    +---+yard    |
-#     |        |   07   |  |        |    |        |   |   12   |
-#     |        +--------+  +--------+    +--------+   +---+----+
-#     |                \                                  |
-#    ++---------+       \  +--------+    +--------+   +---+----+
-#    |intro     |        \ |cell    |    |        |   |temple  |
-# o--+   01     |         \|  08    +----+  trap  |   |   13   |
-#    |          |          |        |   /|        |   |        |
-#    +----+-----+          +--------+  / +--+-+-+-+   +---+----+
-#         |                           /     | | |         |
-#    +----+-----+          +--------+/   +--+-+-+---------+----+
-#    |outro     |          |tomb    |    |antechamber          |
-# o--+   16     +----------+  15    |    |       14            |
-#    |          |          |        |    |                     |
-#    +----------+          +--------+    +---------------------+
+# +----------+    +-------------------+    +-----------+
+# |Connect   |    |  Limbo            |    |   Intro   |
+# |Screen    +----+                   +----+    01     |
+# |          |    |                   |    |           |
+# +----------+    +----+--------------+    +-----+-----+
+#                      |                         |
+# +----------+    +----+--------------+    +-----+-----+
+# | Elevator |    |                   |    | Apartment |
+# |    06    +----+    04 Hallway     +----+    02     |
+# |          |    |                   |    |           |
+# +----+-----+    +----+--------------+    +-----+-----+
+#                      |                         |
+#                 +----+---+               +-----+-----+               
+#                 | Stairs |               | Bathroom  |
+#                 |   05   |               |    03     |
+#                 |        |               |           |
+#                 +--------+               +-----------+
 #
 # There are a few ways we could have gone about building this layout;
 # one is to do all the digging in one go first, then go back and add
@@ -64,18 +48,16 @@
 # linking between them.
 #
 #------------------------------------------------------------
-# Starting to build the tutorial
-#
-# This is simple welcome text introducing the tutorial.
+# Starting to build Druidia.
 #------------------------------------------------------------
 #
 # We start from limbo. Remember that every command in the batchfile
 # -must- be separated by at least one comment-line.
 @tel #2
 #
-# Build the intro room (don't forget to also connect the outro room to this later)
+# Build the Intro room.
 #
-# Note the unique alias tut#XX we give each room. This is used to
+# Note the unique alias dru#XX we give each room. This is used to
 # easily reference this object from other objects in the build script
 # without knowing the dbref. One empty line results in a line-break in
 # the game, whereas two lines create a new paragraph. The length of the
@@ -83,30 +65,29 @@
 # lines to the width as defined by the
 # player's client.
 #
-@dig Intro;tut#01
- : tutorial_world.rooms.IntroRoom
+@dig Introduction;dru#01
+ : rooms.IntroRoom
 #
-# Open an exit to tutorial. We don't do this in the @dig
+# Open an exit to Druidia. We don't do this in the @dig
 # command since we want to describe the exit.
 #
-@open tutorial;tut;intro = tut#01
+@open Druidia;Dru = dru#01
 #
-# describe the tutorial exit
+# describe the exit to Druidia.
 #
-@desc tutorial =
- This starts the |gEvennia tutorial|n, using a small solo game to show off
- some of the server's possibilities.
+@desc Druidia =
+ Ahead lies |gDruidia|n.  Abandon all hope ye, who enter here.
 #
-# now we actually go to the tutorial
+# now we actually go to the Druidia IntroRoom.
 #
-tutorial
+Druidia
 #
 # ... and describe it.
 #
 @desc
- |gWelcome to the Evennia tutorial-world!|n
+ |gWelcome to Druidia!|n
 
- This small quest shows some examples of Evennia usage.
+ This small quest shows some examples of Druidia usage.
 
  |gDo you want help with how to play? Write |yintro|g to get an introduction to
  Evennia and the basics of playing!|n
