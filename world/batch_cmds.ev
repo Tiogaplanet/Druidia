@@ -20,7 +20,8 @@
 # |Screen    +----+                   +----+    01     |
 # |          |    |                   |    |           |
 # +----------+    +----+--------------+    +-----+-----+
-#                      |                         |
+#                      |               \         |
+#                      |                 \       |
 # +----------+    +----+--------------+    +-----+-----+
 # | Elevator |    |                   |    | Apartment |
 # |    06    +----+    04 Hallway     +----+    02     |
@@ -33,9 +34,14 @@
 #                 |        |               |           |
 #                 +--------+               +-----------+
 #
-# There are a few ways we could have gone about building this layout;
-# one is to do all the digging in one go first, then go back and add
-# all the details. The advantage of this is that the area is
+# The exits from Limbo to Intro and Apartment are one-way exits. The
+# only way back to Limbo for the normal user is a locked door in the
+# hallway, which is also a one-way door.  The exit from Intro to 
+# Apartment is also a one-way exit.
+#
+# There are a few ways we could have gone about building the above
+# layout; one is to do all the digging in one go first, then go back
+# and add all the details. The advantage of this is that the area is
 # already there and you can more easily jump ahead in the build file
 # to the detail work when you want to update things later. In this
 # file we will however build and design it all in sequence; room by
@@ -92,26 +98,26 @@ Druidia
 
 This is the part where I tell you a cool story to hook you on playing Druidia.
 
-Try '|yintro|n' for usage help. During the quest, write '|ytutorial|n' to get
+Try '|yintro|n' for usage help. During the quest, write '|yworld|n' to get
 behind-the-scenes help anywhere, and '|ygive up|n' to abandon the quest.
 
 |gwrite 'begin' to start your quest!|n
 
 
-##
-## Show that the tutorial command works ...
-##
-#@set here/tutorial_info =
-# You just tried the |wtutorial|G command. Use it in various rooms to see
-#what's technically going on and what you could try in each room. The
-#intro room assigns some properties to your character, like a simple
-#"health" property used when fighting. Other rooms and puzzles might do
-#the same. Leaving the tutorial world through any of the normal exit
-#rooms will clean away all such temporary properties.
 #
-#If you play this scenario as superuser, you will see a big red
-#warning.  This warning is generated in the intro-rooms Typeclass.
+# Show that the world command works ...
 #
+@set here/world_info =
+ You just tried the |wworld|G command. Use it in various rooms to see
+what's technically going on and what you could try in each room. The
+intro room assigns some properties to your character, like a simple
+"health" property used when fighting. Other rooms and puzzles might do
+the same. Leaving the tutorial world through any of the normal exit
+rooms will clean away all such temporary properties.
+
+If you play this scenario as superuser, you will see a big red
+warning.  This warning is generated in the intro-rooms Typeclass.
+
 #------------------------------------------------------------
 #
 # Outro room
@@ -1340,4 +1346,4 @@ start
 ##
 #@open exit back to Limbo;limbo;exit;back = #2
 ##
-#@tel #2
+@tel #2
