@@ -11,6 +11,7 @@ in a separate module (e.g. if they could have been re-used elsewhere.)
 
 
 import random
+from evennia import DefaultRoom
 from evennia import TICKER_HANDLER
 from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
@@ -23,6 +24,19 @@ from .objects import LightSource
 from django.conf import settings
 
 _SEARCH_AT_RESULT = utils.object_from_module(settings.SEARCH_AT_RESULT)
+
+class Room(DefaultRoom):
+    """
+    Rooms are like any Object, except their location is None
+    (which is default). They also use basetype_setup() to
+    add locks so they cannot be puppeted or picked up.
+    (to change that, use at_object_creation instead)
+
+    See examples/object.py for a list of
+    properties and methods available on all Objects.
+    """
+
+    pass
 
 # -------------------------------------------------------------
 #
