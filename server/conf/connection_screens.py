@@ -23,24 +23,90 @@ of the screen is done by the unlogged-in "look" command.
 from django.conf import settings
 from evennia import utils
 
-CONNECTION_SCREEN = """
-|b==============================================================|n
- Welcome to |g{}|n, powered by Evennia version {}!
+CONNECTION_SCREENA = """
+|b================================================================================|n
 
-|g{}|n is set in a dystopian future, in which people live in 
-massive apartment complexes, large enough to be entire cities 
-in their own right.  Violent gangs and drug dealers shakedown 
-locals regularly. Meanwhile, the Global Economic Consortium 
-ignores the poverty and crime in its pursuit of intergalactic 
-wealth and respect among newly discovered races.  But that is
-a story thousands of miles above this meager existence.
 
- Connect to your account by typing (without the <>):
-      |wconnect <username> <password>|n
- If you need to create an account, type:
-      |wcreate <username> <password>|n
+  |g________                  .__     .___.__         
+  \______ \  _______  __ __ ||__|  __| _/||__||_____   
+   |    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
+   |    `   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+  /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
+          \/                         \/          \/|n
+  
 
- Enter |whelp|n for more info. |wlook|n will re-show this screen.
-|b==============================================================|n""".format(
-    settings.SERVERNAME, utils.get_evennia_version("short"), settings.SERVERNAME
-)
+  |yLet's set a course for Druidia.  -Lone Starr|n
+
+
+
+
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
+
+CONNECTION_SCREENB = """
+|b================================================================================|n
+
+
+  |r________                  .__     .___.__         
+  \______ \  _______  __ __ ||__|  __| _/||__||_____   
+   |    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
+   |    `   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+  /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
+          \/                         \/          \/|n
+
+  
+  |yNever underestimate the power of the Schwartz!  -Yogurt|n
+
+
+
+
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
+
+CONNECTION_SCREENC = """
+|b================================================================================|n
+
+
+  |c________                  .__     .___.__         
+  \______ \  _______  __ __ ||__|  __| _/||__||_____   
+   |    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
+   |    `   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+  /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
+          \/                         \/          \/|n
+
+  
+  |yWhen does this happen in the movie?  -Dark Helmet|n
+
+
+
+
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
+
+CONNECTION_SCREEND = """
+|b================================================================================|n
+
+
+  |m________                  .__     .___.__         
+  \______ \  _______  __ __ ||__|  __| _/||__||_____   
+   |    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
+   |    `   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+  /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
+          \/                         \/          \/|n
+
+  
+  |yWe can't stop, it's too dangerous! We have to slow down first!
+                                                         -Colonel Sandurz|n
+
+
+
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
