@@ -11,7 +11,6 @@ in a separate module (e.g. if they could have been re-used elsewhere.)
 
 
 import random
-from evennia import DefaultRoom
 from evennia import TICKER_HANDLER
 from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
