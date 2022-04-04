@@ -41,8 +41,8 @@ CONNECTION_SCREENA = """
 |=moption|n           |yLet's set a course for Druidia.  -Lone Starr|n              |=mcemit|n
 |=mccreate|n                                                                   |=msetdes|n
 |=mshutdown|n                                                                |=mchannels|n
-|=mxxxxxxxxx|n                                                              |=minventory|n
-|=mlook west|n            |=msw|n                |=ms|n                 |=mse|n          |=mpush button|n
+|=mtel limbo|n                                                              |=minventory|n
+|=mlook south|n            |=msw|n               |=ms|n                 |=mse|n          |=mpush button|n
      Connect to your account                          Create an account
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
            Enter |whelp|n for more info | Enter |wlook|n to show this screen
@@ -66,7 +66,7 @@ CONNECTION_SCREENB = """
 |=moption|n     |yGo then.  There are other worlds than these. -Jake Chambers|n     |=mcemit|n
 |=mccreate|n                                                                  |=msetdesc|n
 |=mshutdown|n                                                                |=mchannels|n
-|=mxxxxxxxxx|n                                                              |=minventory|n
+|=mtel limbo|n                                                              |=minventory|n
 |=mlook north|n           |=mse|n                |=ms|n                 |=msw|n          |=mpush button|n
      Connect to your account                          Create an account
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
@@ -106,8 +106,8 @@ CONNECTION_SCREEND = """
 
                |m________                  .__     .___.__         
                \______ \  _______  __ __ ||__|  __| _/||__||_____   
-      |n.         |m|     \ \  _  __ \|  |  \|  | / __ | |  |\__  \            |n.
-                |m|    _|  \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+      |n.         |m|    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \            |n.
+                |m|   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
                /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /         |n.
                        |m\/                         \/          \/|n
               .
