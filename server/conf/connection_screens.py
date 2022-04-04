@@ -22,8 +22,8 @@ of the screen is done by the unlogged-in "look" command.
 
 from django.conf import settings
 from evennia import utils
-"""
-CONNECTION_SCREENA = \"""
+
+CONNECTION_SCREENA = """
 |b================================================================================|n
 |=mdrop grenade|n         |=mnw|n                |=mn|n                 |=mne|n          |=mshift panel|n
 |=mlanguages|n                                                              |=minventory|n
@@ -41,18 +41,18 @@ CONNECTION_SCREENA = \"""
 |=moption|n           |yLet's set a course for Druidia.  -Lone Starr|n              |=mcemit|n
 |=mccreate|n                                                                   |=msetdes|n
 |=mshutdown|n                                                                |=mchannels|n
+|=mxxxxxxxxx|n                                                              |=minventory|n
 |=mlook west|n            |=msw|n                |=ms|n                 |=mse|n          |=mpush button|n
-
      Connect to your account                          Create an account
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
            Enter |whelp|n for more info | Enter |wlook|n to show this screen
 |b================================================================================|n"""
-"""
-CONNECTION_SCREENB = \"""
+
+CONNECTION_SCREENB = """
 |b================================================================================|n
 |=mdrop grenade|n         |=mne|n                |=mn|n                 |=mnw|n          |=mshift panel|n
 |=mlanguages|n                                                              |=minventory|n
-|=mwhisper|n                                                                  |=mccreate|n
+|=mevennia|n                                                                  |=mccreate|n
 |=msay hi|n                                                                    |=maccess|n
 |=mstyle|n                                                                      |=mcboot|n
 |=mlook|n           |r________                  .__     .___.__                    |=mpage|n
@@ -64,10 +64,10 @@ CONNECTION_SCREENB = \"""
 |=mdig|n                                                                          |=mooc|n
 |=mhelp|n                                                                        |=mtime|n
 |=moption|n     |yGo then.  There are other worlds than these. -Jake Chambers|n     |=mcemit|n
-|=mccreate|n                                                                   |=msetdes|n
+|=mccreate|n                                                                  |=msetdesc|n
 |=mshutdown|n                                                                |=mchannels|n
-|=mlook west|n            |=mse|n                |=ms|n                 |=msw|n          |=mpush button|n
-
+|=mxxxxxxxxx|n                                                              |=minventory|n
+|=mlook north|n           |=mse|n                |=ms|n                 |=msw|n          |=mpush button|n
      Connect to your account                          Create an account
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
            Enter |whelp|n for more info | Enter |wlook|n to show this screen
@@ -81,14 +81,14 @@ CONNECTION_SCREENC = """
 |r////////////////////////////////////////////////////////////////////////////////|n
 |y////////////////////////////////////////////////////////////////////////////////|n
 |y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c________|B/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y/|c.__|B/|b/|B//|y/|c.___.__|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
-|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\______ \  _______  __ __ ||__|  __| _/||__||_____   
-|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/ |c|    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
-|r/////////////// |c|   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
-|y///////////////|c/_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
-|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\/                         \/          \/|n
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\______ \|y//|c_______|y/|r/|c__ __ ||__|||b/|B/|c__| _/||__||_____|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|c|    |  \ \_  __ \|  |  \|  |||b/|c/ __ |||B/|c|  |\__  \|B/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|r////////////////|c|   _|   \ |  | \/|  |  /|  ||/ /_/ |||B/|c|  | / __ \_|r///////////////
+|y///////////////|c/_______  /|r/|c||__|||B/|y//|c||____/|y/|c||__||\____ |||B/|c||__|(____  /|y///////////////
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\/|y/|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|c\/|B//|y//|r//|B/|b/|B//|c\/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
 |y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
 |y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
-|r////////////////|yWhen does this happen in the movie?  -Dark Helmet|n
+|r//////////////////////////|yThey've gone to plaid. -Barf|r//////////////////////////|n
 |y////////////////////////////////////////////////////////////////////////////////|n
 |y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
 |y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
@@ -97,25 +97,27 @@ CONNECTION_SCREENC = """
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
            Enter |whelp|n for more info | Enter |wlook|n to show this screen
 |b================================================================================|n"""
-"""
-CONNECTION_SCREEND = \"""
-|b================================================================================|n
 
+CONNECTION_SCREEND = """
+|b================================================================================|n
+                                                            .
+      .                       .       .
+                .                                  .
 
                |m________                  .__     .___.__         
                \______ \  _______  __ __ ||__|  __| _/||__||_____   
-                |    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \  
-                |   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
-               /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /
-                       \/                         \/          \/|n
-
-  
-           |yNever underestimate the power of the Schwartz!  -Yogurt|n
-  
-
-
-
-
+      |n.         |m|     \ \  _  __ \|  |  \|  | / __ | |  |\__  \            |n.
+                |m|    _|  \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+               /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /         |n.
+                       |m\/                         \/          \/|n
+              .
+  .                   .                 .                               .
+   .
+             |yNever underestimate the power of the Schwartz!  -Yogurt|n  
+                  .                                        .
+.                           .              .                               .
+             .
+                                                                 .
      Connect to your account                          Create an account
   |wconnect <username> <password>|n                 |wcreate <username> <password>|n
            Enter |whelp|n for more info | Enter |wlook|n to show this screen
