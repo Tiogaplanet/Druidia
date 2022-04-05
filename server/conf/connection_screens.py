@@ -23,24 +23,102 @@ of the screen is done by the unlogged-in "look" command.
 from django.conf import settings
 from evennia import utils
 
-CONNECTION_SCREEN = """
-|b==============================================================|n
- Welcome to |g{}|n, powered by Evennia version {}!
+CONNECTION_SCREENA = """
+|b================================================================================|n
+|=mdrop grenade|n         |=mnw|n                |=mn|n                 |=mne|n          |=mshift panel|n
+|=mlanguages|n                                                              |=minventory|n
+|=mwhisper|n                                                                  |=mccreate|n
+|=msay hi|n                                                                    |=maccess|n
+|=mstyle|n                                                                      |=mcboot|n
+|=mlook|n           |g________                  .__     .___.__                    |=mpage|n
+|=mwho|n            |g\______ \  _______  __ __ ||__|  __| _/||__||_____               |=ml e|n
+|=mnw|n              |g|    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \               |=mne|n
+|=mw|n               |g|   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_              |=me|n
+|=mw|n              |g/_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /              |=me|n
+|=msw|n                     |g\/                         \/          \/|n              |=mse|n
+|=mdig|n                                                                          |=mooc|n
+|=mhelp|n                                                                        |=mtime|n
+|=moption|n           |yLet's set a course for Druidia.  -Lone Starr|n              |=mcemit|n
+|=mccreate|n                                                                   |=msetdes|n
+|=mshutdown|n                                                                |=mchannels|n
+|=mtel limbo|n                                                              |=minventory|n
+|=mlook south|n            |=msw|n               |=ms|n                 |=mse|n          |=mpush button|n
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
 
-|g{}|n is set in a dystopian future, in which people live in 
-massive apartment complexes, large enough to be entire cities 
-in their own right.  Violent gangs and drug dealers shakedown 
-locals regularly. Meanwhile, the Global Economic Consortium 
-ignores the poverty and crime in its pursuit of intergalactic 
-wealth and respect among newly discovered races.  But that is
-a story thousands of miles above this meager existence.
+CONNECTION_SCREENB = """
+|b================================================================================|n
+|=mdrop grenade|n         |=mne|n                |=mn|n                 |=mnw|n          |=mshift panel|n
+|=mlanguages|n                                                              |=minventory|n
+|=mevennia|n                                                                  |=mccreate|n
+|=msay hi|n                                                                    |=maccess|n
+|=mstyle|n                                                                      |=mcboot|n
+|=mlook|n           |r________                  .__     .___.__                    |=mpage|n
+|=mwho|n            |r\______ \  _______  __ __ ||__|  __| _/||__||_____               |=ml w|n
+|=mne|n              |r|    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \               |=mnw|n
+|=me|n               |r|   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_              |=mw|n
+|=me|n              |r/_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /              |=mw|n
+|=mse|n                     |r\/                         \/          \/|n              |=msw|n
+|=mdig|n                                                                          |=mooc|n
+|=mhelp|n                                                                        |=mtime|n
+|=moption|n     |yGo then.  There are other worlds than these. -Jake Chambers|n     |=mcemit|n
+|=mccreate|n                                                                  |=msetdesc|n
+|=mshutdown|n                                                                |=mchannels|n
+|=mtel limbo|n                                                              |=minventory|n
+|=mlook north|n           |=mse|n                |=ms|n                 |=msw|n          |=mpush button|n
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
 
- Connect to your account by typing (without the <>):
-      |wconnect <username> <password>|n
- If you need to create an account, type:
-      |wcreate <username> <password>|n
+CONNECTION_SCREENC = """
+|b================================================================================|n
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|r////////////////////////////////////////////////////////////////////////////////|n
+|y////////////////////////////////////////////////////////////////////////////////|n
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c________|B/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y/|c.__|B/|b/|B//|y/|c.___.__|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\______ \|y//|c_______|y/|r/|c__ __ ||__|||b/|B/|c__| _/||__||_____|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|c|    |  \ \_  __ \|  |  \|  |||b/|c/ __ |||B/|c|  |\__  \|B/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|r////////////////|c|   _|   \ |  | \/|  |  /|  ||/ /_/ |||B/|c|  | / __ \_|r///////////////
+|y///////////////|c/_______  /|r/|c||__|||B/|y//|c||____/|y/|c||__||\____ |||B/|c||__|(____  /|y///////////////
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B/|c\/|y/|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|c\/|B//|y//|r//|B/|b/|B//|c\/|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|r//////////////////////////|yThey've gone to plaid. -Barf|r//////////////////////////|n
+|y////////////////////////////////////////////////////////////////////////////////|n
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//
+|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|y//|r//|B/|b/|B//|n
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
 
- Enter |whelp|n for more info. |wlook|n will re-show this screen.
-|b==============================================================|n""".format(
-    settings.SERVERNAME, utils.get_evennia_version("short"), settings.SERVERNAME
-)
+CONNECTION_SCREEND = """
+|b================================================================================|n
+                                                            .
+      .                       .       .
+                .                                  .
+
+               |m________                  .__     .___.__         
+               \______ \  _______  __ __ ||__|  __| _/||__||_____   
+      |n.         |m|    |  \ \_  __ \|  |  \|  | / __ | |  |\__  \            |n.
+                |m|   _|   \ |  | \/|  |  /|  ||/ /_/ | |  | / __ \_
+               /_______  / ||__|   ||____/ ||__||\____ | ||__|(____  /         |n.
+                       |m\/                         \/          \/|n
+              .
+  .                   .                 .                               .
+   .
+             |yNever underestimate the power of the Schwartz!  -Yogurt|n  
+                  .                                        .
+.                           .              .                               .
+             .
+                                                                 .
+     Connect to your account                          Create an account
+  |wconnect <username> <password>|n                 |wcreate <username> <password>|n
+           Enter |whelp|n for more info | Enter |wlook|n to show this screen
+|b================================================================================|n"""
