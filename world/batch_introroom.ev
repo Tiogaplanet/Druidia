@@ -1,0 +1,49 @@
+#------------------------------------------------------------
+# Starting to build Druidia.
+#------------------------------------------------------------
+#
+# We start from limbo. Remember that every command in the batchfile
+# -must- be separated by at least one comment-line.
+@tel #2
+#
+# Build the Intro room.
+#
+# Note the unique alias dru#XX we give each room. This is used to
+# easily reference this object from other objects in the build script
+# without knowing the dbref. One empty line results in a line-break in
+# the game, whereas two lines create a new paragraph. The length of the
+# lines in the batchfile does not matter, in-game they will fill the
+# lines to the width as defined by the
+# player's client.
+#
+@dig Introduction;dru#01
+ : rooms.IntroRoom
+#
+# Open an exit to Druidia. We don't do this in the @dig
+# command since we want to describe the exit.
+#
+@open Druidia;Dru = dru#01
+#------------------------------------------------------------
+#
+# Outro room
+#
+# Called when you are leaving Druidia. 
+# This is the only room we don't give a unique id.
+#------------------------------------------------------------
+#
+@dig/teleport Leaving Druidia
+ : rooms.OutroRoom
+ = exit Druidia;exit;back, start again;start
+#
+@desc
+ You are leaving Druidia. Please come back later.
+#
+@open exit = #2
+# This text is what the @tutorial command finds and displays.
+@set here/tutorial_info =
+ This outro room cleans up properties on the character that was set by
+ the tutorial.
+#
+# Step back to intro room so we can build from there.
+#
+start
