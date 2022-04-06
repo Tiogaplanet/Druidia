@@ -1,6 +1,10 @@
 #------------------------------------------------------------
-# Starting to build Druidia.
+# Test script #1 - Rooms: intro -> base -> outro.
 #------------------------------------------------------------
+#
+# Intended to ensure proper migration from the original tutorial
+# world to Druidia.  Just ensuring things are working from creating
+# the intro, the first room, and the outro.
 #
 # We start from limbo. Remember that every command in the batchfile
 # -must- be separated by at least one comment-line.
@@ -13,8 +17,7 @@
 # without knowing the dbref. One empty line results in a line-break in
 # the game, whereas two lines create a new paragraph. The length of the
 # lines in the batchfile does not matter, in-game they will fill the
-# lines to the width as defined by the
-# player's client.
+# lines to the width as defined by the player's client.
 #
 @dig Introduction;dru#01
  : rooms.IntroRoom
@@ -23,27 +26,132 @@
 # command since we want to describe the exit.
 #
 @open Druidia;Dru = dru#01
-#------------------------------------------------------------
 #
-# Outro room
+# describe the exit to Druidia.
 #
-# Called when you are leaving Druidia. 
-# This is the only room we don't give a unique id.
-#------------------------------------------------------------
+@desc Druidia =
+ This starts your adventures in |gDruidia|n.
 #
-@dig/teleport Leaving Druidia
- : rooms.OutroRoom
- = exit Druidia;exit;back, start again;start
+# now we actually go to Druidia
+#
+Druidia
+#
+# ... and describe it.  Remember, at this point we're in the IntroRoom.
 #
 @desc
- You are leaving Druidia. Please come back later.
+ |gWelcome to |gDruidia|n!|n
+
+ This small test case makes sure that a base room is created correctly.
+
+ |gDo you want help with how to play? Write |yintro|g to get an introduction to
+ Druidia and the basics of playing.|n
+
+Some attention-grabbing text.
+
+Try '|yintro|n' for usage help. During the quest, write '|ytutorial|n' to get
+behind-the-scenes help anywhere, and '|ygive up|n' to abandon the quest.
+
+|gwrite 'begin' to start your quest!|n
+
+
 #
-@open exit = #2
-# This text is what the @tutorial command finds and displays.
+# Show that the tutorial command works ...
+#
 @set here/tutorial_info =
- This outro room cleans up properties on the character that was set by
- the tutorial.
+ You just tried the |wtutorial|G command. Use it in various rooms to see
+what's technically going on and what you could try in each room. The
+intro room assigns some properties to your character, like a simple
+"health" property used when fighting. Other rooms and puzzles might do
+the same. Leaving Druidia through any of the normal exit
+rooms will clean away all such temporary properties.
+
+If you play this scenario as superuser, you will see a big red
+warning.  This warning is generated in the intro-rooms Typeclass.
+
+
+#------------------------------------------------------------
 #
-# Step back to intro room so we can build from there.
+# Your apartment
 #
-start
+#------------------------------------------------------------
+#
+# This room inherits from a Typeclass called Room. It is the base room for 
+# all rooms in Druidia. Note how we can spread the command's arguments 
+# over more than one line for easy reading.  We also make sure to create 
+# plenty of aliases for the room and exits. Note the alias dru#02: this 
+# unique identifier can be used later in the script to always find the 
+# way back to this room (for example by teleporting and similar). This is 
+# necessary since there is no way of knowing beforehand what dbref a given 
+# room will get in the database.
+#
+@dig/teleport An apartment;apartment;dru#02
+ : rooms.Room
+ = begin adventure;begin;start
+#
+# We define the tutorial message seen when using the tutorial command
+#
+ @set here/tutorial_info =
+ Base room
+
+ This room inherits from Evennia's DefaultRoom. All other rooms in Druidia
+ inherit from this room.
+
+ The room also has 'details' set on it (such as the workstation on your
+ desk), that are snippets of text stored on the room that the custom look command
+ uses for all Druidia rooms to display.
+#
+@desc
+ Your apartment is cold and dim.  A |wworkstation|n sits atop a steel desk,
+ whirring.  A steel chair is tucked under the desk.  Your bed is tightly made 
+ with just a sheet and an itchy wool blanket.
+#
+# Mood-setting details to look at. This makes use of the custom look
+# command in use on base rooms to display extra text strings. It
+# adds the detail as a dictionary Attribute on the room.
+#
+@detail workstation;computer =
+It's an old beige box and monochrome screen.  An LED display on the front
+panel displays "66" in a dull green glow.
+#
+#------------------------------------------------------------
+#
+# Outro - end of the test case.
+#
+# This cleans all temporary attributes set on the Character
+# by the tutorial, removes weapons and items etc.
+#
+#------------------------------------------------------------
+#
+@dig End of Druidia;end;dru#03
+ : rooms.OutroRoom
+ = Exit Druidia;exit;end
+#
+# All weapons from the rack gets an automatic alias the same as the
+# rack_id. This we can use to check if any such weapon is in inventory
+# before unlocking the exit.
+#
+@lock Exit Druidia = view:tag(rack_sarcophagus, tutorial_world) ; traverse:tag(rack_sarcophagus, tutorial_world)
+#
+# to Druidia outro
+@tel dru#03
+#
+# We want to clear the weapon-rack ids on the character when exiting.
+@set here/wracklist = ["rack_barrel", "rack_sarcophagus"]
+#
+# this room quits the tutorial and cleans up all variables that were set.
+@desc
+ |gThanks for trying out Druidia.
+
+
+ The game play given here is just scraping the surface of
+ what can be done in Druidia.|n
+#
+@set here/tutorial_info =
+ This room cleans up all temporary attributes and tags that were put
+ on the character during play.
+#
+# Tie this back to Limbo
+#
+@open exit back to Limbo;limbo;exit;back = #2
+#
+@tel #2
