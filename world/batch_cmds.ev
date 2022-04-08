@@ -53,13 +53,39 @@
 # unique alias-ids given to each room, to allow safe teleporting and
 # linking between them.
 #
-#------------------------------------------------------------
-# Starting to build Druidia.
-#------------------------------------------------------------
-#
-# We start from limbo. Remember that every command in the batchfile
+# We start building from limbo. Remember that every command in the batchfile
 # -must- be separated by at least one comment-line.
 @tel #2
+#
+# First, let's give Limbo a fun description.
+@desc Limbo =
+----------------------------------- = Limbo = ----------------------------------
+     
+     
+     
+     
+     
+                           
+ There is no beginning and no end. It just is, for a little while. A 
+strange moaning sound fills the void. A low, whispering voice repeats, 
+"Welcome to |gLimbo|n."
+
+
+
+
+It is impossible to measure the passage of time.
+ 
+ 
+ 
+ 
+
+ 
+ 
+----------------------------------- = Limbo = ----------------------------------
+#
+#------------------------------------------------------------
+# Build Druidia.
+#------------------------------------------------------------
 #
 # Build the Intro room.
 #
@@ -151,7 +177,7 @@ start
 # This room is where every character starts.
 #
 @dig/teleport Apartment;apartment;dru#02
- : rooms.TutorialRoom
+ : rooms.Room
  = begin adventure;begin;start
 #
 # We define the tutorial message seen when using the tutorial command
@@ -167,7 +193,7 @@ start
 # are snippets of text stored on the room that the custom look command
 # used for all tutorial rooms can display.
 #
-@desc
+@desc apartment =
  This is your apartment.
 #
 # To the east, you glimpse the ragged outline of a castle |wruin|n. It sits
