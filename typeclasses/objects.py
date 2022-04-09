@@ -7,7 +7,7 @@ are also defined here, together with the object.
 
 Objects:
 
-TutorialObject
+Object
 
 TutorialReadable
 TutorialClimbable
@@ -27,14 +27,14 @@ from evennia.prototypes.spawner import spawn
 
 # -------------------------------------------------------------
 #
-# TutorialObject
+# Object
 #
-# The TutorialObject is the base class for all items
-# in the tutorial. They have an attribute "tutorial_info"
+# The Object is the base class for all items
+# in Druidia. They have an attribute "tutorial_info"
 # on them that the global tutorial command can use to extract
 # interesting behind-the scenes information about the object.
 #
-# TutorialObjects may also be "reset". What the reset means
+# Objects may also be "reset". What the reset means
 # is up to the object. It can be the resetting of the world
 # itself, or the removal of an inventory item from a
 # character's inventory when leaving the tutorial, for example.
@@ -42,9 +42,9 @@ from evennia.prototypes.spawner import spawn
 # -------------------------------------------------------------
 
 
-class TutorialObject(DefaultObject):
+class Object(DefaultObject):
     """
-    This is the baseclass for all objects in the tutorial.
+    This is the baseclass for all objects in Druidia.
     """
 
     def at_object_creation(self):
@@ -113,7 +113,7 @@ class CmdSetReadable(CmdSet):
         self.add(CmdRead())
 
 
-class TutorialReadable(TutorialObject):
+class TutorialReadable(Object):
     """
     This simple object defines some attributes and
     """
@@ -139,8 +139,8 @@ class TutorialReadable(TutorialObject):
 # The climbable object works so that once climbed, it sets
 # a flag on the climber to show that it was climbed. A simple
 # command 'climb' handles the actual climbing. The memory
-# of what was last climbed is used in a simple puzzle in the
-# tutorial.
+# of what was last climbed is used in a simple puzzle in
+# Druidia.
 #
 # -------------------------------------------------------------
 
@@ -187,7 +187,7 @@ class CmdSetClimbable(CmdSet):
         self.add(CmdClimb())
 
 
-class TutorialClimbable(TutorialObject):
+class TutorialClimbable(Object):
     """
     A climbable object. All that is special about it is that it has
     the "climb" command available on it.
@@ -211,7 +211,7 @@ class TutorialClimbable(TutorialObject):
 # -------------------------------------------------------------
 
 
-class Obelisk(TutorialObject):
+class Obelisk(Object):
     """
     This object changes its description randomly, and which is shown
     determines which order "clue id" is stored on the Character for
@@ -313,7 +313,7 @@ class CmdSetLight(CmdSet):
         self.add(CmdLight())
 
 
-class LightSource(TutorialObject):
+class LightSource(Object):
     """
     This implements a light source object.
 
@@ -622,7 +622,7 @@ class CmdSetCrumblingWall(CmdSet):
         self.add(CmdPressButton())
 
 
-class CrumblingWall(TutorialObject, DefaultExit):
+class CrumblingWall(Object, DefaultExit):
     """
     This is a custom Exit.
 
@@ -931,7 +931,7 @@ class CmdSetWeapon(CmdSet):
         self.add(CmdAttack())
 
 
-class Weapon(TutorialObject):
+class Weapon(Object):
     """
     This defines a bladed weapon.
 
@@ -1127,7 +1127,7 @@ class CmdSetWeaponRack(CmdSet):
         self.add(CmdGetWeapon())
 
 
-class WeaponRack(TutorialObject):
+class WeaponRack(Object):
     """
     This object represents a weapon store. When people use the
     "get weapon" command on this rack, it will produce one

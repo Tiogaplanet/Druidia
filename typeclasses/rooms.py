@@ -11,7 +11,6 @@ in a separate module (e.g. if they could have been re-used elsewhere.)
 
 
 import random
-from evennia import DefaultRoom
 from evennia import TICKER_HANDLER
 from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
@@ -25,22 +24,10 @@ from django.conf import settings
 
 _SEARCH_AT_RESULT = utils.object_from_module(settings.SEARCH_AT_RESULT)
 
-class Room(DefaultRoom):
-    """
-    Rooms are like any Object, except their location is None
-    (which is default). They also use basetype_setup() to
-    add locks so they cannot be puppeted or picked up.
-    (to change that, use at_object_creation instead)
-
-    See examples/object.py for a list of
-    properties and methods available on all Objects.
-    """
-
-    pass
 
 # -------------------------------------------------------------
 #
-# Tutorial room - parent room class
+# Room - parent room class
 #
 # This room is the parent of all rooms in the tutorial.
 # It defines a tutorial command on itself (available to
@@ -96,7 +83,7 @@ class CmdTutorial(Command):
 # for the @detail command we inherit from MuxCommand, since
 # we want to make use of MuxCommand's pre-parsing of '=' in the
 # argument.
-class CmdTutorialSetDetail(default_cmds.MuxCommand):
+class CmdSetDetail(default_cmds.MuxCommand):
     """
     sets a detail on a room
 
@@ -109,8 +96,8 @@ class CmdTutorialSetDetail(default_cmds.MuxCommand):
         @detail castle;ruin;tower = The distant ruin ...
 
     This sets a "detail" on the object this command is defined on
-    (TutorialRoom for this tutorial). This detail can be accessed with
-    the TutorialRoomLook command sitting on TutorialRoom objects (details
+    (Room for this tutorial). This detail can be accessed with
+    the RoomLook command sitting on Room objects (details
     are set as a simple dictionary on the room). This is a Builder command.
 
     We custom parse the key for the ;-separator in order to create
@@ -139,7 +126,7 @@ class CmdTutorialSetDetail(default_cmds.MuxCommand):
         self.caller.msg("Detail set: '%s': '%s'" % (self.lhs, self.rhs))
 
 
-class CmdTutorialLook(default_cmds.CmdLook):
+class CmdLook(default_cmds.CmdLook):
     """
     looks at the room and on details
 
@@ -155,7 +142,7 @@ class CmdTutorialLook(default_cmds.CmdLook):
     allows us to look at "details" in the room.  These details are
     things to examine and offers some extra description without
     actually having to be actual database objects. It uses the
-    return_detail() hook on TutorialRooms for this.
+    return_detail() hook on Rooms for this.
     """
 
     # we don't need to specify key/locks etc, this is already
@@ -218,7 +205,7 @@ class CmdTutorialLook(default_cmds.CmdLook):
         return
 
 
-class CmdTutorialGiveUp(default_cmds.MuxCommand):
+class CmdGiveUp(default_cmds.MuxCommand):
     """
     Give up the tutorial-world quest and return to Limbo, the start room of the
     server.
@@ -242,7 +229,7 @@ class CmdTutorialGiveUp(default_cmds.MuxCommand):
         self.caller.move_to(outro_room)
 
 
-class TutorialRoomCmdSet(CmdSet):
+class RoomCmdSet(CmdSet):
     """
     Implements the simple tutorial cmdset. This will overload the look
     command in the default CharacterCmdSet since it has a higher
@@ -255,13 +242,21 @@ class TutorialRoomCmdSet(CmdSet):
     def at_cmdset_creation(self):
         """add the tutorial-room commands"""
         self.add(CmdTutorial())
-        self.add(CmdTutorialSetDetail())
-        self.add(CmdTutorialLook())
-        self.add(CmdTutorialGiveUp())
+        self.add(CmdSetDetail())
+        self.add(CmdLook())
+        self.add(CmdGiveUp())
 
 
-class TutorialRoom(DefaultRoom):
+class Room(DefaultRoom):
     """
+    Rooms are like any Object, except their location is None
+    (which is default). They also use basetype_setup() to
+    add locks so they cannot be puppeted or picked up.
+    (to change that, use at_object_creation instead)
+
+    See examples/object.py for a list of
+    properties and methods available on all Objects.
+    
     This is the base room type for all rooms in the tutorial world.
     It defines a cmdset on itself for reading tutorial info about the location.
     """
@@ -271,7 +266,7 @@ class TutorialRoom(DefaultRoom):
         self.db.tutorial_info = (
             "This is a tutorial room. It allows you to use the 'tutorial' command."
         )
-        self.cmdset.add_default(TutorialRoomCmdSet)
+        self.cmdset.add_default(RoomCmdSet)
 
     def at_object_receive(self, new_arrival, source_location):
         """
@@ -345,7 +340,7 @@ WEATHER_STRINGS = (
 )
 
 
-class WeatherRoom(TutorialRoom):
+class WeatherRoom(Room):
     """
     This should probably better be called a rainy room...
 
@@ -372,7 +367,7 @@ class WeatherRoom(TutorialRoom):
         TICKER_HANDLER.add(
             interval=self.db.interval, callback=self.update_weather, idstring="tutorial"
         )
-        # this is parsed by the 'tutorial' command on TutorialRooms.
+        # this is parsed by the 'tutorial' command on Rooms.
         self.db.tutorial_info = "This room has a Script running that has it echo a weather-related message at irregular intervals."
 
     def update_weather(self, *args, **kwargs):
@@ -433,7 +428,7 @@ class CmdSetEvenniaIntro(CmdSet):
         self.add(CmdEvenniaIntro())
 
 
-class IntroRoom(TutorialRoom):
+class IntroRoom(Room):
     """
     Intro room
 
@@ -957,7 +952,7 @@ class DarkCmdSet(CmdSet):
         self.add(default_cmds.CmdHome())
 
 
-class DarkRoom(TutorialRoom):
+class DarkRoom(Room):
     """
     A dark room. This tries to start the DarkState script on all
     objects entering. The script is responsible for making sure it is
@@ -1078,7 +1073,7 @@ class DarkRoom(TutorialRoom):
 # -------------------------------------------------------------
 
 
-class TeleportRoom(TutorialRoom):
+class TeleportRoom(Room):
     """
     Teleporter - puzzle room.
 
@@ -1148,7 +1143,7 @@ class TeleportRoom(TutorialRoom):
 # -------------------------------------------------------------
 
 
-class OutroRoom(TutorialRoom):
+class OutroRoom(Room):
     """
     Outro room.
 

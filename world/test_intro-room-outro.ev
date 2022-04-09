@@ -1,0 +1,142 @@
+#------------------------------------------------------------
+# Test script #1 - Rooms: intro -> base -> outro.
+#------------------------------------------------------------
+#
+# Intended to ensure proper migration from the original tutorial
+# world to Druidia.  Just ensuring things are working from creating
+# the intro, the first room, and the outro.
+#
+# We start from limbo. Remember that every command in the batchfile
+# -must- be separated by at least one comment-line.
+@tel #2
+#
+#------------------------------------------------------------
+#
+# Build the Intro room.
+#
+#------------------------------------------------------------
+# Note the unique alias dru#XX we give each room. This is used to
+# easily reference this object from other objects in the build script
+# without knowing the dbref. One empty line results in a line-break in
+# the game, whereas two lines create a new paragraph. The length of the
+# lines in the batchfile does not matter, in-game they will fill the
+# lines to the width as defined by the player's client.
+#
+@dig Introduction;dru#01
+ : rooms.IntroRoom
+#
+# Open an exit to Druidia. We don't do this in the @dig
+# command since we want to describe the exit.
+#
+@open Druidia;Dru = dru#01
+#
+# describe the exit to Druidia.
+#
+@desc Druidia =
+ Ahead lies |gDruidia|n.  Abandon all hope ye, who enter here.
+#
+# now we actually go to the Druidia IntroRoom.
+#
+Druidia
+#
+# ... and describe it.
+#
+@desc
+ |gWelcome to Druidia!|n
+
+|gDo you want help with how to play? Write |yintro|g to get an 
+introduction to the basics of playing!|n
+
+This is the part where I tell you a cool story to hook you on playing 
+Druidia.
+
+Write '|ygive up|n' to abandon the quest.
+
+|gWrite 'begin' to start your quest!|n
+
+
+#
+#------------------------------------------------------------
+#
+# Your apartment
+#
+#------------------------------------------------------------
+#
+# This room inherits from a Typeclass called Room. It is the base room for 
+# all rooms in Druidia. Note how we can spread the command's arguments 
+# over more than one line for easy reading.  We also make sure to create 
+# plenty of aliases for the room and exits. Note the alias dru#02: this 
+# unique identifier can be used later in the script to always find the 
+# way back to this room (for example by teleporting and similar). This is 
+# necessary since there is no way of knowing beforehand what dbref a given 
+# room will get in the database.
+#
+@dig/teleport Apartment;apartment;dru#02
+ : rooms.Room
+ = begin adventure;begin;start
+#
+#
+@desc apartment =
+ Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel 
+desk|n, whirring.  A |wsteel chair|n is tucked under the desk.  Your bed
+is tightly made with just a sheet and an itchy wool blanket.
+#
+#
+# Mood-setting details to look at. This makes use of the custom look
+# command in use on tutorial rooms to display extra text strings. It
+# adds the detail as a dictionary Attribute on the room.
+#
+@detail steel desk;desk =
+ An old, heavy desk. It appears to be secured to the floor.
+#
+@detail steel chair;chair =
+ An uncomfortable steel chair recessed into a track in the floor - probably
+to prevent theft.
+#
+@create/drop workstation;computer
+#
+@desc workstation = 
+ An old, beige computer. Two buttons and an LED dsplay adorn the front 
+panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
+display reads |g66|n.  An asset tag is affixed to the side of the 
+workstation that reads
+ 
+PEACHTREES
+  ASSET #
+0000000001
+#
+# It's important to lock the workstation object or players will be able to
+# pick it up and put it in their pocket ...
+#
+@lock workstation = get:false()
+#
+# By setting the lock_msg attribute there will be a nicer error message if people
+# try to pick up the workstation.
+#
+@set workstation/get_err_msg =
+ The workstation is secured to the desk.  It appears to be property of
+ Peachtrees.  I wouldn't take it if I were you.
+#
+#
+#------------------------------------------------------------
+#
+# Outro - end of the test case.
+#
+# This cleans all temporary attributes set on the Character
+# by the tutorial, removes weapons and items etc.
+#
+#------------------------------------------------------------
+#
+@dig/teleport Leaving Druidia;dru#03
+ : rooms.OutroRoom
+ = exit Druidia;exit;back, start again;start
+#
+@desc
+ You are leaving Druidia. Please come back later.
+#
+@open exit = #2
+# This text is what the @tutorial command finds and displays.
+#
+@open exit back to Limbo;limbo;exit;back = #2
+#
+@tel #2
