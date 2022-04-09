@@ -44,30 +44,17 @@ Druidia
 @desc
  |gWelcome to Druidia!|n
 
- |gDo you want help with how to play? Write |yintro|g to get an introduction to
- Evennia and the basics of playing!|n
+|gDo you want help with how to play? Write |yintro|g to get an 
+introduction to the basics of playing!|n
 
-This is the part where I tell you a cool story to hook you on playing Druidia.
+This is the part where I tell you a cool story to hook you on playing 
+Druidia.
 
-Try '|yintro|n' for usage help. During the quest, write '|yworld|n' to get
-behind-the-scenes help anywhere, and '|ygive up|n' to abandon the quest.
+Write '|ygive up|n' to abandon the quest.
 
-|gwrite 'begin' to start your quest!|n
+|gWrite 'begin' to start your quest!|n
 
 
-#
-# Show that the world command works ...
-#
-@set here/world_info =
- You just tried the |wworld|G command. Use it in various rooms to see
-what's technically going on and what you could try in each room. The
-intro room assigns some properties to your character, like a simple
-"health" property used when fighting. Other rooms and puzzles might do
-the same. Leaving the tutorial world through any of the normal exit
-rooms will clean away all such temporary properties.
-
-If you play this scenario as superuser, you will see a big red
-warning.  This warning is generated in the intro-rooms Typeclass.
 #
 #------------------------------------------------------------
 #
@@ -88,23 +75,11 @@ warning.  This warning is generated in the intro-rooms Typeclass.
  : rooms.Room
  = begin adventure;begin;start
 #
-# We define the tutorial message seen when using the tutorial command
-#
-# @set here/tutorial_info =
-# Weather room
-#
-# This room inherits from a parent called WeatherRoom. It uses the
-# tickerhandler to regularly 'tick and randomly display various
-# weather-related messages.
-#
-# The room also has 'details' set on it (such as the ruin in the distance), those
-# are snippets of text stored on the room that the custom look command
-# used for all tutorial rooms can display.
 #
 @desc apartment =
- Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel desk|n,
- whirring.  A |wsteel chair|n is tucked under the desk.  Your bed is tightly made 
- with just a sheet and an itchy wool blanket.
+ Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel 
+desk|n, whirring.  A |wsteel chair|n is tucked under the desk.  Your bed
+is tightly made with just a sheet and an itchy wool blanket.
 #
 #
 # Mood-setting details to look at. This makes use of the custom look
@@ -116,19 +91,19 @@ warning.  This warning is generated in the intro-rooms Typeclass.
 #
 @detail steel chair;chair =
  An uncomfortable steel chair recessed into a track in the floor - probably
- to prevent theft.
+to prevent theft.
 #
 @create/drop workstation;computer
 #
 @desc workstation = 
  An old, beige computer. Two buttons and an LED dsplay adorn the front 
- panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
- display reads |g66|n.  An asset tag is affixed to the side of the 
- workstation that reads
+panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
+display reads |g66|n.  An asset tag is affixed to the side of the 
+workstation that reads
  
- PEACHTREES
-   ASSET #
- 0000000001
+PEACHTREES
+  ASSET #
+0000000001
 #
 # It's important to lock the workstation object or players will be able to
 # pick it up and put it in their pocket ...
@@ -142,11 +117,6 @@ warning.  This warning is generated in the intro-rooms Typeclass.
  The workstation is secured to the desk.  It appears to be property of
  Peachtrees.  I wouldn't take it if I were you.
 #
-@set workstation/tutorial_info =
- This is a normal object, locked with the lock get:false() so that
- Characters can't pick it up. Since the get_err Attribute is also set,
- you get a customized error message when trying to pick it up (that
- is checked and echoed by the 'get' command).
 #
 #------------------------------------------------------------
 #
@@ -166,9 +136,6 @@ warning.  This warning is generated in the intro-rooms Typeclass.
 #
 @open exit = #2
 # This text is what the @tutorial command finds and displays.
-@set here/tutorial_info =
- This outro room cleans up properties on the character that was set by
- the tutorial.
 #
 @open exit back to Limbo;limbo;exit;back = #2
 #
