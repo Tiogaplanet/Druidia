@@ -75,7 +75,7 @@ class CmdRead(Command):
 
     key = "read"
     locks = "cmd:all()"
-    help_category = "World"
+    help_category = "world"
 
     def func(self):
         """
@@ -151,7 +151,7 @@ class CmdClimb(Command):
 
     key = "climb"
     locks = "cmd:all()"
-    help_category = "World"
+    help_category = "world"
 
     def func(self):
         """Implements function"""

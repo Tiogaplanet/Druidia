@@ -147,13 +147,16 @@ Write '|ygive up|n' to abandon the quest.
 #
 #
 @desc apartment =
- Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel desk|n,
-whirring.  A |wsteel chair|n is tucked under the desk.  Your bed is tightly made 
-with just a sheet and an itchy wool blanket.
+ Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
+desk|n, whirring.  A |wsteel chair|n is tucked under the desk. Your bed
+is tightly made with just a sheet and an itchy wool blanket. At one end
+of your apartment is a kitchen unit. To the west is your small bathroom
+and to the east is a door to the hallway.  Next to the exit is a tall
+cabinet closet.
 #
 #
 # Mood-setting details to look at. This makes use of the custom look
-# command in use on tutorial rooms to display extra text strings. It
+# command in use on Room typeclass to display extra text strings. It
 # adds the detail as a dictionary Attribute on the room.
 #
 @detail steel desk;desk =
@@ -166,7 +169,7 @@ to prevent theft.
 @create/drop workstation;computer
 #
 @desc workstation = 
- An old, beige computer. Two buttons and an LED dsplay adorn the front 
+ An old, beige computer. Two buttons and an LED display adorn the front 
 panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
 display reads |g66|n.  An asset tag is affixed to the side of the 
 workstation that reads
@@ -175,18 +178,40 @@ PEACHTREES
   ASSET #
 0000000001
 #
-# It's important to lock the workstation object or players will be able to
-# pick it up and put it in their pocket ...
+# It's important to lock the workstation object or players will be able 
+# to pick it up and put it in their pocket ...
 #
 @lock workstation = get:false()
 #
-# By setting the lock_msg attribute there will be a nicer error message if people
-# try to pick up the workstation.
+# By setting the lock_msg attribute there will be a nicer error message 
+# if people try to pick up the workstation.
 #
 @set workstation/get_err_msg =
  The workstation is secured to the desk.  It appears to be property of
- Peachtrees.  I wouldn't take it if I were you.
+Peachtrees.  I wouldn't take it if I were you.
 #
+# To meet building code, show an evacuation route.
+#
+@create/drop Evacuation route;route;evacuation : objects.Readable
+#
+@desc Evacuation route =
+ The evacuation route is engraved on sheet steel and secured to the 
+wall with theft-proof screws. 
+#
+@lock Evacuation route = get:false()
+#
+@set Evacuation route/get_err_msg = 
+ The evacuation route is affixed to the wall for legal reasons.
+#
+@set Evacuation route/readable_text =
+
+
+ |rEVACUATION ROUTE|n
+
+In case of fire, do not use elevators.  Proceed to ground level using 
+the stairs at the north end of the hallway.
+
+
 #------------------------------------------------------------
 #
 # Outro room
@@ -198,9 +223,12 @@ PEACHTREES
  : rooms.OutroRoom
  = exit Druidia;exit;back, start again;start
 #
-@desc
+@desc Leaving Druidia =
+
+
  You are leaving Druidia. Please come back later.
-#
+ 
+
 #
 # ...and exit.
 @open exit back to Limbo;limbo;exit;back = #2
@@ -1325,4 +1353,5 @@ PEACHTREES
 ##
 #@open exit back to Limbo;limbo;exit;back = #2
 ##
-@tel #2
+#@tel #2
+@tel dru#02
