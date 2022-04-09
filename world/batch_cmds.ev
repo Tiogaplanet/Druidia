@@ -143,31 +143,7 @@ rooms will clean away all such temporary properties.
 
 If you play this scenario as superuser, you will see a big red
 warning.  This warning is generated in the intro-rooms Typeclass.
-
-#------------------------------------------------------------
 #
-# Outro room
-#
-# Called when you are leaving Druidia. 
-# This is the only room we don't give a unique id.
-#------------------------------------------------------------
-#
-@dig/teleport Leaving Druidia
- : rooms.OutroRoom
- = exit Druidia;exit;back, start again;start
-#
-@desc
- You are leaving Druidia. Please come back later.
-#
-@open exit = #2
-# This text is what the @tutorial command finds and displays.
-@set here/tutorial_info =
- This outro room cleans up properties on the character that was set by
- the tutorial.
-#
-# Step back to intro room so we can build from there.
-#
-start
 #------------------------------------------------------------
 #
 # Your apartment.
@@ -194,65 +170,74 @@ start
 # used for all tutorial rooms can display.
 #
 @desc apartment =
- This is your apartment.
+ Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel desk|n,
+ whirring.  A |wsteel chair|n is tucked under the desk.  Your bed is tightly made 
+ with just a sheet and an itchy wool blanket.
 #
-# To the east, you glimpse the ragged outline of a castle |wruin|n. It sits
-# perched on a sheer cliff out into the water, isolated from the
-# shore. The only way to reach it seems by way of an old hanging bridge,
-# anchored not far east from here.
-##
-## Mood-setting details to look at. This makes use of the custom look
-## command in use on tutorial rooms to display extra text strings. It
-## adds the detail as a dictionary Attribute on the room.
-##
-#@detail ruin;ruins;castle =
-# A fair bit out from the rocky shores you can make out the foggy
-# outlines of a ruined castle. The once mighty towers have crumbled and
-# it presents a jagged shape against the rainy sky. The ruin is perched
-# on its own cliff, only connected to the mainland by means of an old
-# hanging bridge starting not far east from you.
-##
-#@detail sea;ocean;waves =
-# The gray sea stretches as far as the eye can see to the east. Far
-# below you its waves crash against the foot of the cliff. The vast
-# inland moor meets the ocean along a high and uninviting coastline of
-# ragged vertical stone.
 #
-# Once this part of the world might have been beautiful, but now the
-# eternal winds and storms have washed it all down into a gray and
-# barren wasteland.
-##
-#@detail
-##
-## This is the well you will come back up from if you end up in the underground.
-##
-#@create/drop Old well;well
-##
-#@desc well =
-# The ruins of an old well sit some way off the path. The stone circle
-# has collapsed and whereas there is still a chain hanging down the
-# hole, it does not look very secure. It is probably a remnant of some
-# old settlement back in the day.
-##
-## It's important to lock the well object or players will be able to
-## pick it up and put it in their pocket ...
-##
-#@lock well = get:false()
-##
-## By setting the lock_msg attribute there will be a nicer error message if people
-## try to pick up the well.
-##
-#@set well/get_err_msg =
-# You nudge the heavy stones of the well with a foot. There is no way
-# you can ever budge this on your own (besides, what would you do with
-# all those stones? Start your own quarry?).
-##
-#@set well/tutorial_info =
-# This is a normal object, locked with the lock get:false() so that
-# Characters can't pick it up. Since the get_err Attribute is also set,
-# you get a customized error message when trying to pick it up (that
-# is checked and echoed by the 'get' command).
-##
+# Mood-setting details to look at. This makes use of the custom look
+# command in use on tutorial rooms to display extra text strings. It
+# adds the detail as a dictionary Attribute on the room.
+#
+@detail steel desk;desk =
+ An old, heavy desk. It appears to be secured to the floor.
+#
+@detail steel chair;chair =
+ An uncomfortable steel chair recessed into a track in the floor - probably
+ to prevent theft.
+#
+@create/drop workstation;computer
+#
+@desc workstation = 
+ An old, beige computer. Two buttons and an LED dsplay adorn the front 
+ panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
+ display reads |g66|n.  An asset tag is affixed to the side of the 
+ workstation that reads
+ 
+ PEACHTREES
+   ASSET #
+ 0000000001
+#
+# It's important to lock the workstation object or players will be able to
+# pick it up and put it in their pocket ...
+#
+@lock workstation = get:false()
+#
+# By setting the lock_msg attribute there will be a nicer error message if people
+# try to pick up the workstation.
+#
+@set workstation/get_err_msg =
+ The workstation is secured to the desk.  It appears to be property of
+ Peachtrees.  I wouldn't take it if I were you.
+#
+@set workstation/tutorial_info =
+ This is a normal object, locked with the lock get:false() so that
+ Characters can't pick it up. Since the get_err Attribute is also set,
+ you get a customized error message when trying to pick it up (that
+ is checked and echoed by the 'get' command).
+#
+#------------------------------------------------------------
+#
+# Outro room
+#
+# Called when you are leaving Druidia. 
+#------------------------------------------------------------
+#
+@dig/teleport Leaving Druidia;dru#03
+ : rooms.OutroRoom
+ = exit Druidia;exit;back, start again;start
+#
+@desc
+ You are leaving Druidia. Please come back later.
+#
+# This text is what the @tutorial command finds and displays.
+@set here/tutorial_info =
+ This outro room cleans up properties on the character that was set by
+ the tutorial.
+#
+# ...and exit.
+@open exit back to Limbo;limbo;exit;back = #2
+#
 #@create/drop Wooden sign;sign : tutorial_world.objects.TutorialReadable
 ##
 #@desc sign =

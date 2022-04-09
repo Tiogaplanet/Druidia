@@ -10,8 +10,11 @@
 # -must- be separated by at least one comment-line.
 @tel #2
 #
+#------------------------------------------------------------
+#
 # Build the Intro room.
 #
+#------------------------------------------------------------
 # Note the unique alias dru#XX we give each room. This is used to
 # easily reference this object from other objects in the build script
 # without knowing the dbref. One empty line results in a line-break in
@@ -30,45 +33,42 @@
 # describe the exit to Druidia.
 #
 @desc Druidia =
- This starts your adventures in |gDruidia|n.
+ Ahead lies |gDruidia|n.  Abandon all hope ye, who enter here.
 #
-# now we actually go to Druidia
+# now we actually go to the Druidia IntroRoom.
 #
 Druidia
 #
-# ... and describe it.  Remember, at this point we're in the IntroRoom.
+# ... and describe it.
 #
 @desc
- |gWelcome to |gDruidia|n!|n
-
- This small test case makes sure that a base room is created correctly.
+ |gWelcome to Druidia!|n
 
  |gDo you want help with how to play? Write |yintro|g to get an introduction to
- Druidia and the basics of playing.|n
+ Evennia and the basics of playing!|n
 
-Some attention-grabbing text.
+This is the part where I tell you a cool story to hook you on playing Druidia.
 
-Try '|yintro|n' for usage help. During the quest, write '|ytutorial|n' to get
+Try '|yintro|n' for usage help. During the quest, write '|yworld|n' to get
 behind-the-scenes help anywhere, and '|ygive up|n' to abandon the quest.
 
 |gwrite 'begin' to start your quest!|n
 
 
 #
-# Show that the tutorial command works ...
+# Show that the world command works ...
 #
-@set here/tutorial_info =
- You just tried the |wtutorial|G command. Use it in various rooms to see
+@set here/world_info =
+ You just tried the |wworld|G command. Use it in various rooms to see
 what's technically going on and what you could try in each room. The
 intro room assigns some properties to your character, like a simple
 "health" property used when fighting. Other rooms and puzzles might do
-the same. Leaving Druidia through any of the normal exit
+the same. Leaving the tutorial world through any of the normal exit
 rooms will clean away all such temporary properties.
 
 If you play this scenario as superuser, you will see a big red
 warning.  This warning is generated in the intro-rooms Typeclass.
-
-
+#
 #------------------------------------------------------------
 #
 # Your apartment
@@ -84,34 +84,69 @@ warning.  This warning is generated in the intro-rooms Typeclass.
 # necessary since there is no way of knowing beforehand what dbref a given 
 # room will get in the database.
 #
-@dig/teleport An apartment;apartment;dru#02
+@dig/teleport Apartment;apartment;dru#02
  : rooms.Room
  = begin adventure;begin;start
 #
 # We define the tutorial message seen when using the tutorial command
 #
- @set here/tutorial_info =
- Base room
-
- This room inherits from Evennia's DefaultRoom. All other rooms in Druidia
- inherit from this room.
-
- The room also has 'details' set on it (such as the workstation on your
- desk), that are snippets of text stored on the room that the custom look command
- uses for all Druidia rooms to display.
+# @set here/tutorial_info =
+# Weather room
 #
-@desc
- Your apartment is cold and dim.  A |wworkstation|n sits atop a steel desk,
- whirring.  A steel chair is tucked under the desk.  Your bed is tightly made 
+# This room inherits from a parent called WeatherRoom. It uses the
+# tickerhandler to regularly 'tick and randomly display various
+# weather-related messages.
+#
+# The room also has 'details' set on it (such as the ruin in the distance), those
+# are snippets of text stored on the room that the custom look command
+# used for all tutorial rooms can display.
+#
+@desc apartment =
+ Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel desk|n,
+ whirring.  A |wsteel chair|n is tucked under the desk.  Your bed is tightly made 
  with just a sheet and an itchy wool blanket.
 #
+#
 # Mood-setting details to look at. This makes use of the custom look
-# command in use on base rooms to display extra text strings. It
+# command in use on tutorial rooms to display extra text strings. It
 # adds the detail as a dictionary Attribute on the room.
 #
-@detail workstation;computer =
-It's an old beige box and monochrome screen.  An LED display on the front
-panel displays "66" in a dull green glow.
+@detail steel desk;desk =
+ An old, heavy desk. It appears to be secured to the floor.
+#
+@detail steel chair;chair =
+ An uncomfortable steel chair recessed into a track in the floor - probably
+ to prevent theft.
+#
+@create/drop workstation;computer
+#
+@desc workstation = 
+ An old, beige computer. Two buttons and an LED dsplay adorn the front 
+ panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
+ display reads |g66|n.  An asset tag is affixed to the side of the 
+ workstation that reads
+ 
+ PEACHTREES
+   ASSET #
+ 0000000001
+#
+# It's important to lock the workstation object or players will be able to
+# pick it up and put it in their pocket ...
+#
+@lock workstation = get:false()
+#
+# By setting the lock_msg attribute there will be a nicer error message if people
+# try to pick up the workstation.
+#
+@set workstation/get_err_msg =
+ The workstation is secured to the desk.  It appears to be property of
+ Peachtrees.  I wouldn't take it if I were you.
+#
+@set workstation/tutorial_info =
+ This is a normal object, locked with the lock get:false() so that
+ Characters can't pick it up. Since the get_err Attribute is also set,
+ you get a customized error message when trying to pick it up (that
+ is checked and echoed by the 'get' command).
 #
 #------------------------------------------------------------
 #
@@ -122,35 +157,18 @@ panel displays "66" in a dull green glow.
 #
 #------------------------------------------------------------
 #
-@dig End of Druidia;end;dru#03
+@dig/teleport Leaving Druidia;dru#03
  : rooms.OutroRoom
- = Exit Druidia;exit;end
+ = exit Druidia;exit;back, start again;start
 #
-# All weapons from the rack gets an automatic alias the same as the
-# rack_id. This we can use to check if any such weapon is in inventory
-# before unlocking the exit.
-#
-@lock Exit Druidia = view:tag(rack_sarcophagus, tutorial_world) ; traverse:tag(rack_sarcophagus, tutorial_world)
-#
-# to Druidia outro
-@tel dru#03
-#
-# We want to clear the weapon-rack ids on the character when exiting.
-@set here/wracklist = ["rack_barrel", "rack_sarcophagus"]
-#
-# this room quits the tutorial and cleans up all variables that were set.
 @desc
- |gThanks for trying out Druidia.
-
-
- The game play given here is just scraping the surface of
- what can be done in Druidia.|n
+ You are leaving Druidia. Please come back later.
 #
+@open exit = #2
+# This text is what the @tutorial command finds and displays.
 @set here/tutorial_info =
- This room cleans up all temporary attributes and tags that were put
- on the character during play.
-#
-# Tie this back to Limbo
+ This outro room cleans up properties on the character that was set by
+ the tutorial.
 #
 @open exit back to Limbo;limbo;exit;back = #2
 #
