@@ -2,7 +2,7 @@
 
 Room Typeclasses for the World.
 
-This defines special types of Rooms available in the tutorial. To keep
+This defines special types of Rooms available in Druidia. To keep
 everything in one place we define them together with the custom
 commands needed to control them. Those commands could also have been
 in a separate module (e.g. if they could have been re-used elsewhere.)
@@ -29,55 +29,9 @@ _SEARCH_AT_RESULT = utils.object_from_module(settings.SEARCH_AT_RESULT)
 #
 # Room - parent room class
 #
-# This room is the parent of all rooms in the tutorial.
-# It defines a tutorial command on itself (available to
-# all those who are in a tutorial room).
+# This room is the parent of all rooms in Druidia.
 #
 # -------------------------------------------------------------
-
-#
-# Special command available in all tutorial rooms
-
-
-class CmdTutorial(Command):
-    """
-    Get help during the tutorial
-
-    Usage:
-      tutorial [obj]
-
-    This command allows you to get behind-the-scenes info
-    about an object or the current location.
-
-    """
-
-    key = "tutorial"
-    aliases = ["tut"]
-    locks = "cmd:all()"
-    help_category = "World"
-
-    def func(self):
-        """
-        All we do is to scan the current location for an Attribute
-        called `tutorial_info` and display that.
-        """
-
-        caller = self.caller
-
-        if not self.args:
-            target = self.obj  # this is the room the command is defined on
-        else:
-            target = caller.search(self.args.strip())
-            if not target:
-                return
-        helptext = target.db.tutorial_info or ""
-
-        if helptext:
-            helptext = f" |G{helptext}|n"
-        else:
-            helptext = " |RSorry, there is no tutorial help available here.|n"
-        helptext += "\n\n (Write 'give up' if you want to abandon your quest.)"
-        caller.msg(helptext)
 
 
 # for the @detail command we inherit from MuxCommand, since
@@ -96,7 +50,7 @@ class CmdSetDetail(default_cmds.MuxCommand):
         @detail castle;ruin;tower = The distant ruin ...
 
     This sets a "detail" on the object this command is defined on
-    (Room for this tutorial). This detail can be accessed with
+    (Room in this case). This detail can be accessed with
     the RoomLook command sitting on Room objects (details
     are set as a simple dictionary on the room). This is a Builder command.
 
@@ -138,7 +92,7 @@ class CmdLook(default_cmds.CmdLook):
     Observes your location, details at your location or objects
     in your vicinity.
 
-    Tutorial: This is a child of the default Look command, that also
+    This is a child of the default Look command, that also
     allows us to look at "details" in the room.  These details are
     things to examine and offers some extra description without
     actually having to be actual database objects. It uses the
@@ -207,9 +161,7 @@ class CmdLook(default_cmds.CmdLook):
 
 class CmdGiveUp(default_cmds.MuxCommand):
     """
-    Give up the tutorial-world quest and return to Limbo, the start room of the
-    server.
-
+    Give up the quest and return to Limbo, the start room of the server.
     """
 
     key = "give up"
@@ -231,17 +183,16 @@ class CmdGiveUp(default_cmds.MuxCommand):
 
 class RoomCmdSet(CmdSet):
     """
-    Implements the simple tutorial cmdset. This will overload the look
+    Implements the simple room cmdset. This will overload the look
     command in the default CharacterCmdSet since it has a higher
-    priority (ChracterCmdSet has prio 0)
+    priority (ChracterCmdSet has priority 0)
     """
 
-    key = "tutorial_cmdset"
+    key = "room_cmdset"
     priority = 1
 
     def at_cmdset_creation(self):
-        """add the tutorial-room commands"""
-        self.add(CmdTutorial())
+        """add the room commands"""
         self.add(CmdSetDetail())
         self.add(CmdLook())
         self.add(CmdGiveUp())
@@ -257,23 +208,19 @@ class Room(DefaultRoom):
     See examples/object.py for a list of
     properties and methods available on all Objects.
     
-    This is the base room type for all rooms in the tutorial world.
-    It defines a cmdset on itself for reading tutorial info about the location.
+    This is the base room type for all rooms in Druidia.
     """
 
     def at_object_creation(self):
         """Called when room is first created"""
-        self.db.tutorial_info = (
-            "This is a tutorial room. It allows you to use the 'tutorial' command."
-        )
         self.cmdset.add_default(RoomCmdSet)
 
     def at_object_receive(self, new_arrival, source_location):
         """
-        When an object enter a tutorial room we tell other objects in
-        the room about it by trying to call a hook on them. The Mob object
-        uses this to cheaply get notified of enemies without having
-        to constantly scan for them.
+        When an object enters a room we tell other objects in the room 
+        about it by trying to call a hook on them. The Mob object uses 
+        this to cheaply get notified of enemies without having to 
+        constantly scan for them.
 
         Args:
             new_arrival (Object): the object that just entered this room.
@@ -365,10 +312,8 @@ class WeatherRoom(Room):
         # so as to not have all weather rooms update at the same time.
         self.db.interval = random.randint(50, 70)
         TICKER_HANDLER.add(
-            interval=self.db.interval, callback=self.update_weather, idstring="tutorial"
+            interval=self.db.interval, callback=self.update_weather, idstring="druidia"
         )
-        # this is parsed by the 'tutorial' command on Rooms.
-        self.db.tutorial_info = "This room has a Script running that has it echo a weather-related message at irregular intervals."
 
     def update_weather(self, *args, **kwargs):
         """
@@ -394,8 +339,8 @@ SUPERUSER_WARNING = (
 #
 # Intro Room - unique room
 #
-# This room marks the start of the tutorial. It sets up properties on
-# the player char that is needed for the tutorial.
+# This room marks the start of Druidia. It sets up properties on
+# the player char that is needed for the game.
 #
 # -------------------------------------------------------------
 
@@ -441,11 +386,6 @@ class IntroRoom(Room):
         Called when the room is first created.
         """
         super().at_object_creation()
-        self.db.tutorial_info = (
-            "The first room of the tutorial. "
-            "This assigns the health Attribute to "
-            "the account."
-        )
         self.cmdset.add(CmdSetEvenniaIntro, permanent=True)
 
     def at_object_receive(self, character, source_location):
@@ -453,7 +393,7 @@ class IntroRoom(Room):
         Assign properties on characters
         """
 
-        # setup character for the tutorial
+        # setup character health.
         health = self.db.char_health or 20
 
         if character.has_account:
@@ -467,7 +407,7 @@ class IntroRoom(Room):
             # quell user
             if character.account:
                 character.account.execute_cmd("quell")
-                character.msg("(Auto-quelling while in tutorial-world)")
+                character.msg("(Auto-quelling while in Druidia.)")
 
 
 # -------------------------------------------------------------
@@ -491,7 +431,7 @@ class CmdEast(Command):
     """
     Go eastwards across the bridge.
 
-    Tutorial info:
+    Info:
         This command relies on the caller having two Attributes
         (assigned by the room when entering):
             - east_exit: a unique name or dbref to the room to go to
@@ -538,7 +478,7 @@ class CmdWest(Command):
     """
     Go westwards across the bridge.
 
-    Tutorial info:
+    Info:
        This command relies on the caller having two Attributes
        (assigned by the room when entering):
            - east_exit: a unique name or dbref to the room to go to
@@ -618,7 +558,7 @@ class CmdLookBridge(Command):
     """
     looks around at the bridge.
 
-    Tutorial info:
+    Info:
         This command assumes that the room has an Attribute
         "fall_exit", a unique name or dbref to the place they end upp
         if they fall off the bridge.
@@ -672,7 +612,7 @@ class CmdBridgeHelp(Command):
     key = "help"
     aliases = ["h", "?"]
     locks = "cmd:all()"
-    help_category = "Tutorial world"
+    help_category = "World"
 
     def func(self):
         """Implements the command."""
@@ -692,7 +632,6 @@ class BridgeCmdSet(CmdSet):
 
     def at_cmdset_creation(self):
         """Called at first cmdset creation"""
-        self.add(CmdTutorial())
         self.add(CmdEast())
         self.add(CmdWest())
         self.add(CmdLookBridge())
@@ -807,8 +746,8 @@ class BridgeRoom(WeatherRoom):
 # Dark Room - a room with states
 #
 # This room limits the movemenets of its denizens unless they carry an active
-# LightSource object (LightSource is defined in
-#                     tutorialworld.objects.LightSource)
+# LightSource object (LightSource is defined in 
+#                                       world.objects.LightSource)
 #
 # -------------------------------------------------------------------------------
 
@@ -943,7 +882,6 @@ class DarkCmdSet(CmdSet):
 
     def at_cmdset_creation(self):
         """populate the cmdset."""
-        self.add(CmdTutorial())
         self.add(CmdLookDark())
         self.add(CmdDarkHelp())
         self.add(CmdDarkNoMatch())
@@ -961,10 +899,8 @@ class DarkRoom(Room):
     The is_lit Attribute is used to define if the room is currently lit
     or not, so as to properly echo state changes.
 
-    Since this room (in the tutorial) is meant as a sort of catch-all,
-    we also make sure to heal characters ending up here, since they
-    may have been beaten up by the ghostly apparition at this point.
-
+    Since this room is meant as a sort of catch-all, we also make sure 
+    to heal characters ending up here.
     """
 
     def at_object_creation(self):
@@ -972,7 +908,6 @@ class DarkRoom(Room):
         Called when object is first created.
         """
         super().at_object_creation()
-        self.db.tutorial_info = "This is a room with custom command sets on itself."
         # the room starts dark.
         self.db.is_lit = False
         self.cmdset.add(DarkCmdSet, permanent=True)
@@ -1138,7 +1073,7 @@ class TeleportRoom(Room):
 #
 # Outro room - unique exit room
 #
-# Cleans up the character from all tutorial-related properties.
+# Cleans up the character from all properties et by Druidia.
 #
 # -------------------------------------------------------------
 
@@ -1147,8 +1082,8 @@ class OutroRoom(Room):
     """
     Outro room.
 
-    Called when exiting the tutorial, cleans the
-    character of tutorial-related attributes.
+    Called when exiting Druidia, cleans the character of attributes set
+    by the world during play.
 
     """
 
@@ -1157,12 +1092,6 @@ class OutroRoom(Room):
         Called when the room is first created.
         """
         super().at_object_creation()
-        self.db.tutorial_info = (
-            "The last room of the tutorial. "
-            "This cleans up all temporary Attributes "
-            "the tutorial may have assigned to the "
-            "character."
-        )
 
     def at_object_receive(self, character, source_location):
         """
@@ -1176,9 +1105,9 @@ class OutroRoom(Room):
             del character.db.combat_parry_mode
             del character.db.tutorial_bridge_position
             for obj in character.contents:
-                if obj.typeclass_path.startswith("evennia.contrib.tutorial_world"):
+                if obj.typeclass_path.startswith("."):
                     obj.delete()
-            character.tags.clear(category="tutorial_world")
+            character.tags.clear(category="world")
 
     def at_object_leave(self, character, destination):
         if character.account:

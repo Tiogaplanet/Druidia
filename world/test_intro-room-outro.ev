@@ -134,9 +134,6 @@ PEACHTREES
 @desc
  You are leaving Druidia. Please come back later.
 #
-@open exit = #2
-# This text is what the @tutorial command finds and displays.
-#
 @open exit back to Limbo;limbo;exit;back = #2
 #
 @tel #2

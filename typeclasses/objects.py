@@ -2,15 +2,15 @@
 World - basic objects - Griatch 2011
 
 This module holds all "dead" object definitions for
-the tutorial world. Object-commands and -cmdsets
+Druidia. Object-commands and -cmdsets
 are also defined here, together with the object.
 
 Objects:
 
 Object
 
-TutorialReadable
-TutorialClimbable
+Readable
+Climbable
 Obelisk
 LightSource
 CrumblingWall
@@ -30,14 +30,12 @@ from evennia.prototypes.spawner import spawn
 # Object
 #
 # The Object is the base class for all items
-# in Druidia. They have an attribute "tutorial_info"
-# on them that the global tutorial command can use to extract
-# interesting behind-the scenes information about the object.
+# in Druidia.
 #
 # Objects may also be "reset". What the reset means
 # is up to the object. It can be the resetting of the world
 # itself, or the removal of an inventory item from a
-# character's inventory when leaving the tutorial, for example.
+# character's inventory when leaving Druidia, for example.
 #
 # -------------------------------------------------------------
 
@@ -50,7 +48,6 @@ class Object(DefaultObject):
     def at_object_creation(self):
         """Called when the object is first created."""
         super().at_object_creation()
-        self.db.tutorial_info = "No tutorial info is available for this object."
 
     def reset(self):
         """Resets the object, whatever that may mean."""
@@ -113,7 +110,7 @@ class CmdSetReadable(CmdSet):
         self.add(CmdRead())
 
 
-class TutorialReadable(Object):
+class Readable(Object):
     """
     This simple object defines some attributes and
     """
@@ -124,9 +121,6 @@ class TutorialReadable(Object):
         Attribute and add the readable cmdset.
         """
         super().at_object_creation()
-        self.db.tutorial_info = (
-            "This is an object with a 'read' command defined in a command set on itself."
-        )
         self.db.readable_text = "There is no text written on %s." % self.key
         # define a command on the object.
         self.cmdset.add_default(CmdSetReadable, permanent=True)
@@ -176,7 +170,7 @@ class CmdClimb(Command):
             ostring = "You climb %s. Having looked around, you climb down again." % self.obj.name
         self.caller.msg(ostring)
         # set a tag on the caller to remember that we climbed.
-        self.caller.tags.add("tutorial_climbed_tree", category="tutorial_world")
+        self.caller.tags.add("tutorial_climbed_tree", category="world")
 
 
 class CmdSetClimbable(CmdSet):
@@ -187,7 +181,7 @@ class CmdSetClimbable(CmdSet):
         self.add(CmdClimb())
 
 
-class TutorialClimbable(Object):
+class Climbable(Object):
     """
     A climbable object. All that is special about it is that it has
     the "climb" command available on it.
@@ -227,9 +221,6 @@ class Obelisk(Object):
     def at_object_creation(self):
         """Called when object is created."""
         super().at_object_creation()
-        self.db.tutorial_info = (
-            "This object changes its desc randomly, and makes sure to remember which one you saw."
-        )
         self.db.puzzle_descs = ["You see a normal stone slab"]
         # make sure this can never be picked up
         self.locks.add("get:false()")
@@ -334,9 +325,6 @@ class LightSource(Object):
     def at_object_creation(self):
         """Called when object is first created."""
         super().at_object_creation()
-        self.db.tutorial_info = (
-            "This object can be lit to create light. It has a timeout for how long it burns."
-        )
         self.db.is_giving_light = False
         self.db.burntime = 60 * 3  # 3 minutes
         # this is the default desc, it can of course be customized
@@ -415,7 +403,7 @@ class LightSource(Object):
 # roots hanging through the middle position, but only one each
 # along the sides. The goal is to make the center position clear.
 # (yes, it's really as simple as it sounds, just move the roots
-# to each side to "win". This is just a tutorial, remember?)
+# to each side to "win".)
 #
 # The ShiftRoot command depends on the root object having an
 # Attribute root_pos (a dictionary) to describe the current
@@ -766,7 +754,7 @@ class CrumblingWall(Object, DefaultExit):
 
     def reset(self):
         """
-        Called by tutorial world runner, or whenever someone successfully
+        Called by world runner, or whenever someone successfully
         traversed the Exit.
         """
         self.location.msg_contents(
@@ -793,15 +781,14 @@ class CrumblingWall(Object, DefaultExit):
 #
 # Weapon - object type
 #
-# A weapon is necessary in order to fight in the tutorial
-# world. A weapon (which here is assumed to be a bladed
-# melee weapon for close combat) has three commands,
-# stab, slash and defend. Weapons also have a property "magic"
-# to determine if they are usable against certain enemies.
+# A weapon (which here is assumed to be a bladed melee weapon for close 
+# combat) has three commands, stab, slash and defend. Weapons also have 
+# a property "magic" to determine if they are usable against certain 
+# enemies.
 #
-# Since Characters don't have special skills in the tutorial,
-# we let the weapon itself determine how easy/hard it is
-# to hit with it, and how much damage it can do.
+# Since Characters don't have special skills (yet), we let the weapon 
+# itself determine how easy/hard it is to hit with it, and how much 
+# damage it can do.
 #
 # -------------------------------------------------------------
 
@@ -982,7 +969,7 @@ class Weapon(Object):
 
 WEAPON_PROTOTYPES = {
     "weapon": {
-        "typeclass": "evennia.contrib.tutorial_world.objects.Weapon",
+        "typeclass": "objects.Weapon",
         "key": "Weapon",
         "hit": 0.2,
         "parry": 0.2,
@@ -1173,13 +1160,13 @@ class WeaponRack(Object):
         pulling weapons from it indefinitely.
         """
         rack_id = self.db.rack_id
-        if caller.tags.get(rack_id, category="tutorial_world"):
+        if caller.tags.get(rack_id, category="world"):
             caller.msg(self.db.no_more_weapons_msg)
         else:
             prototype = random.choice(self.db.available_weapons)
             # use the spawner to create a new Weapon from the
             # spawner dictionary, tag the caller
             wpn = spawn(WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES)[0]
-            caller.tags.add(rack_id, category="tutorial_world")
+            caller.tags.add(rack_id, category="world")
             wpn.location = caller
             caller.msg(self.db.get_weapon_msg % wpn.key)
