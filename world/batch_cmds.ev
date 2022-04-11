@@ -132,7 +132,6 @@ Write '|ygive up|n' to abandon the quest.
 |gWrite 'begin' to start your quest!|n
 
 
-#
 #------------------------------------------------------------
 #
 # Your apartment.
@@ -214,23 +213,37 @@ the stairs at the north end of the hallway.
 
 #------------------------------------------------------------
 #
-# Outro room
+# The bathroom.
 #
-# Called when you are leaving Druidia. 
 #------------------------------------------------------------
 #
-@dig/teleport Leaving Druidia;dru#03
+# You will need a place to do important things.
+#
+@dig/teleport bathroom;bath;dru#03
+ : rooms.Room
+ = bathroom
+#
+@desc bathroom =
+ A bidet, a shower stall, a toilet, a sink, and a lot of tile.
+#
+@open apartment = dru#02
+#
+#------------------------------------------------------------
+#
+# Outro - leaving Druidia.
+#
+# This cleans all temporary attributes set on the Character,
+# removes weapons and items etc.
+#
+#------------------------------------------------------------
+#
+@dig/teleport Leaving Druidia;dru#04
  : rooms.OutroRoom
  = exit Druidia;exit;back, start again;start
 #
-@desc Leaving Druidia =
-
-
+@desc
  You are leaving Druidia. Please come back later.
- 
-
 #
-# ...and exit.
 @open exit back to Limbo;limbo;exit;back = #2
 #
 # STT: Unedited beyond here.
@@ -1353,5 +1366,4 @@ the stairs at the north end of the hallway.
 ##
 #@open exit back to Limbo;limbo;exit;back = #2
 ##
-#@tel #2
-@tel dru#02
+@tel #2
