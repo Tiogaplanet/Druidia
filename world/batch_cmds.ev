@@ -289,7 +289,7 @@ bowl.
  
  You can quit or start over.
 #
-@open start over;start;over = #dru01
+@open start over;start;over = dru#01
 #
 # STT: Unedited beyond here.
 #@create/drop Wooden sign;sign : tutorial_world.objects.TutorialReadable
