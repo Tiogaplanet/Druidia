@@ -223,7 +223,7 @@ the stairs at the north end of the hallway.
 #
 @dig/teleport water closet;water;closet;dru#03
  : rooms.Room
- = water closet
+ = water closet;water;closet
 #
 # Open an exit back to the apartment.
 #
@@ -236,8 +236,8 @@ At least it has a |wbidet|n. All civilized societies use bidets. A
 here along with a |wsink basin|n. A |wmirror|n hides a |wmedicine cabinet|n.
 #
 @detail bidet =
- A steel bidet is secured to the wall.  it has handles for hot and
-cold water and a spray handle at the end of a flexible steel hose.
+ A steel bidet is secured to the wall.  it has handles for |rhot|n and
+|bcold|n water and a spray handle at the end of a flexible steel hose.
 #
 @detail toilet =
  A steel toilet is secured to the wall.  A single button is mounted
@@ -251,7 +251,7 @@ in the wall above the toilet.
 #
 @detail basin =
  The basin looks pretty old.  The steel bowl is topped with handles
-for hot and cold water.  The faucet is a simple steel arch into the
+for |rhot|n and |bcold|n water.  The faucet is a simple steel arch into the
 bowl.
 #
 @detail medicine cabinet;medicine;cabinet = 
@@ -267,7 +267,12 @@ bowl.
 # Go back to the apartment...
 @tel dru02
 #
-# TODO: ...and create the exit to the hallway.
+@dig/teleport hallway;hall;dru#04
+ : rooms.Room
+ = hallway;hall
+#
+@desc hallway =
+ Doors line both walls.  At the end of the room is an elevator.
 #
 #------------------------------------------------------------
 #
@@ -279,7 +284,7 @@ bowl.
 #
 #------------------------------------------------------------
 #
-@dig/teleport Leaving Druidia;dru#04
+@dig/teleport Leaving Druidia;dru#05
  : rooms.OutroRoom
 #
 @desc Leaving Druidia =

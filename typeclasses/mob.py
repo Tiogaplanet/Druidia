@@ -11,7 +11,7 @@ from evennia import TICKER_HANDLER
 from evennia import search_object
 from evennia import Command, CmdSet
 from evennia import logger
-import .objects as dru_objects
+import objects as dru_objects
 
 
 class CmdMobOnOff(Command):
