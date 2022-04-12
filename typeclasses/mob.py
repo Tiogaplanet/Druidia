@@ -58,7 +58,7 @@ class MobCmdSet(CmdSet):
         self.add(CmdMobOnOff())
 
 
-class Mob(objects.Object):
+class Mob(dru_objects.Object):
     """
     This is a state-machine AI mobile. It has several states which are
     controlled from setting various Attributes. All default to True:
