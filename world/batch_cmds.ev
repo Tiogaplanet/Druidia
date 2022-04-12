@@ -29,9 +29,9 @@
 # +----+-----+    +----+--------------+    +-----+-----+
 #                      |                         |
 #                 +----+---+               +-----+-----+               
-#                 | Stairs |               | Bathroom  |
-#                 |   05   |               |    03     |
-#                 |        |               |           |
+#                 | Stairs |               |    Wash   |
+#                 |   05   |               |   Closet  |
+#                 |        |               |     03    |
 #                 +--------+               +-----------+
 #
 # The exits from Limbo to Intro and Apartment are one-way exits. The
@@ -91,6 +91,8 @@ It is impossible to measure the passage of time.
 #
 # Build the Intro room.
 #
+#------------------------------------------------------------
+#
 # Note the unique alias dru#XX we give each room. This is used to
 # easily reference this object from other objects in the build script
 # without knowing the dbref. One empty line results in a line-break in
@@ -149,9 +151,9 @@ Write '|ygive up|n' to abandon the quest.
  Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
 desk|n, whirring.  A |wsteel chair|n is tucked under the desk. Your bed
 is tightly made with just a sheet and an itchy wool blanket. At one end
-of your apartment is a kitchen unit. To the west is your small bathroom
-and to the east is a door to the hallway.  Next to the exit is a tall
-cabinet closet.
+of your apartment is a kitchen unit. To the west is a small water
+closet and to the east is a door to the hallway.  Next to the exit is a
+tall cabinet closet.
 #
 #
 # Mood-setting details to look at. This makes use of the custom look
@@ -213,38 +215,81 @@ the stairs at the north end of the hallway.
 
 #------------------------------------------------------------
 #
-# The bathroom.
+# The water closet.
 #
 #------------------------------------------------------------
 #
 # You will need a place to do important things.
 #
-@dig/teleport bathroom;bath;dru#03
+@dig/teleport water closet;water;closet;dru#03
  : rooms.Room
- = bathroom
+ = water closet
 #
-@desc bathroom =
- A bidet, a shower stall, a toilet, a sink, and a lot of tile.
+# Open an exit back to the apartment.
 #
 @open apartment = dru#02
+#
+@desc water closet =
+ Like the rest of the apartment, the water closet is a steel affair.
+At least it has a bidet. All civilized societies use bidets. A 
+toilet is affixed to the wall next to the bidet. A shower stall is
+here along with a sink basin. A mirror hides a medicine cabinet.
+#
+@detail bidet =
+ A steel bidet is secured to the wall.  it has handles for hot and
+cold water and a spray handle at the end of a flexible steel hose.
+#
+@detail toilet =
+ A steel toilet is secured to the wall.  A single button is mounted
+in the wall above the toilet.
+#
+@detail mirror =
+ You see yourself in the mirror.
+#
+@detail shower stall;shower;stall =
+ It could use a cleaning.  It looks rusty and old.
+#
+@detail basin =
+ The basin looks pretty old.  The steel bowl is topped with handles
+for hot and cold water.  The faucet is a simple steel arch into the
+bowl.
+#
+@detail medicine cabinet;medicine;cabinet = 
+ Behind the mirror is a medicine cabinet with three shelves.
+#
+#
+#------------------------------------------------------------
+#
+# The hallway.
+#
+#------------------------------------------------------------
+#
+# Go back to the apartment...
+@tel dru02
+#
+# TODO: ...and create the exit to the hallway.
 #
 #------------------------------------------------------------
 #
 # Outro - leaving Druidia.
 #
 # This cleans all temporary attributes set on the Character,
-# removes weapons and items etc.
+# removes weapons and items etc. This room is only accessible
+# by using the "give up" command.
 #
 #------------------------------------------------------------
 #
 @dig/teleport Leaving Druidia;dru#04
  : rooms.OutroRoom
- = exit Druidia;exit;back, start again;start
 #
-@desc
+@desc Leaving Druidia =
+
+
  You are leaving Druidia. Please come back later.
+ 
+ You can quit or start over.
 #
-@open exit back to Limbo;limbo;exit;back = #2
+@open start over;start;over = #dru01
 #
 # STT: Unedited beyond here.
 #@create/drop Wooden sign;sign : tutorial_world.objects.TutorialReadable
