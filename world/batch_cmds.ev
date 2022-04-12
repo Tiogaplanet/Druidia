@@ -231,9 +231,9 @@ the stairs at the north end of the hallway.
 #
 @desc water closet =
  Like the rest of the apartment, the water closet is a steel affair.
-At least it has a bidet. All civilized societies use bidets. A 
-toilet is affixed to the wall next to the bidet. A shower stall is
-here along with a sink basin. A mirror hides a medicine cabinet.
+At least it has a |wbidet|n. All civilized societies use bidets. A 
+|wtoilet|n is affixed to the wall next to the bidet. A |wshower stall|n is
+here along with a |wsink basin|n. A |wmirror|n hides a |wmedicine cabinet|n.
 #
 @detail bidet =
  A steel bidet is secured to the wall.  it has handles for hot and
