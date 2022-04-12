@@ -11,7 +11,7 @@ from evennia import TICKER_HANDLER
 from evennia import search_object
 from evennia import Command, CmdSet
 from evennia import logger
-import .objects as tut_objects
+import .objects as dru_objects
 
 
 class CmdMobOnOff(Command):
@@ -58,7 +58,7 @@ class MobCmdSet(CmdSet):
         self.add(CmdMobOnOff())
 
 
-class Mob(tut_objects.TutorialObject):
+class Mob(objects.Object):
     """
     This is a state-machine AI mobile. It has several states which are
     controlled from setting various Attributes. All default to True:
@@ -69,9 +69,8 @@ class Mob(tut_objects.TutorialObject):
             stationary (idling) until attacked.
         aggressive: if set, will attack Characters in
             the same room using whatever Weapon it
-            carries (see tutorial_world.objects.Weapon).
-            if unset, the mob will never engage in combat
-            no matter what.
+            carries (see objects.Weapon). If unset, the mob
+            will never engage in combat no matter what.
         hunting: if set, the mob will pursue enemies trying
             to flee from it, so it can enter combat. If unset,
             it will return to patrolling/idling if fled from.
@@ -147,8 +146,8 @@ class Mob(tut_objects.TutorialObject):
         self.db.health = 20
 
         # when this mob defeats someone, we move the character off to
-        # some other place (Dark Cell in the tutorial).
-        self.db.send_defeated_to = "dark cell"
+        # some other place (Your apartment in this case).
+        self.db.send_defeated_to = "apartment"
         # text to echo to the defeated foe.
         self.db.defeat_msg = "You fall to the ground."
         self.db.defeat_msg_room = "%s falls to the ground."
@@ -159,8 +158,6 @@ class Mob(tut_objects.TutorialObject):
         self.db.death_msg = "After the last hit %s evaporates." % self.key
         self.db.hit_msg = "%s wails, shudders and writhes." % self.key
         self.db.irregular_msgs = ["the enemy looks about.", "the enemy changes stance."]
-
-        self.db.tutorial_info = "This is an object with simple state AI, using a ticker to move."
 
     def _set_ticker(self, interval, hook_key, stop=False):
         """
@@ -186,7 +183,7 @@ class Mob(tut_objects.TutorialObject):
         we need to remember this across reloads.
 
         """
-        idstring = "tutorial_mob"  # this doesn't change
+        idstring = "druidia_mob"  # this doesn't change
         last_interval = self.db.last_ticker_interval
         last_hook_key = self.db.last_hook_key
         if last_interval and last_hook_key:
@@ -271,7 +268,7 @@ class Mob(tut_objects.TutorialObject):
         self.ndb.is_patrolling = True
         self.ndb.is_hunting = False
         self.ndb.is_attacking = False
-        # for the tutorial, we also heal the mob in this mode
+        # We also heal the mob in this mode
         self.db.health = self.db.full_health
 
     def start_hunting(self):
@@ -372,7 +369,7 @@ class Mob(tut_objects.TutorialObject):
             return
 
         # we use the same attack commands as defined in
-        # tutorial_world.objects.Weapon, assuming that
+        # objects.Weapon, assuming that
         # the mob is given a Weapon to attack with.
         attack_cmd = random.choice(("thrust", "pierce", "stab", "slash", "chop"))
         self.execute_cmd("%s %s" % (attack_cmd, target))
@@ -430,10 +427,10 @@ class Mob(tut_objects.TutorialObject):
     def at_new_arrival(self, new_character):
         """
         This is triggered whenever a new character enters the room.
-        This is called by the TutorialRoom the mob stands in and
-        allows it to be aware of changes immediately without needing
-        to poll for them all the time. For example, the mob can react
-        right away, also when patrolling on a very slow ticker.
+        This is called by the Room the mob stands in and allows it to
+        be aware of changes immediately without needing to poll for
+        them all the time. For example, the mob can react right away,
+        also when patrolling on a very slow ticker.
         """
         # the room actually already checked all we need, so
         # we know it is a valid target.
