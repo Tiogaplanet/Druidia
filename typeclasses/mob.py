@@ -6,12 +6,13 @@ object based on that mobile class.
 """
 
 import random
+from typeclasses.objects import Object
 
 from evennia import TICKER_HANDLER
 from evennia import search_object
 from evennia import Command, CmdSet
 from evennia import logger
-import objects as dru_objects
+
 
 
 class CmdMobOnOff(Command):
@@ -58,7 +59,7 @@ class MobCmdSet(CmdSet):
         self.add(CmdMobOnOff())
 
 
-class Mob(dru_objects.Object):
+class Mob(Object):
     """
     This is a state-machine AI mobile. It has several states which are
     controlled from setting various Attributes. All default to True:

@@ -265,7 +265,7 @@ bowl.
 #------------------------------------------------------------
 #
 # Go back to the apartment...
-@tel dru02
+@tel dru#02
 #
 @dig/teleport hallway;hall;dru#04
  : rooms.Room
@@ -273,6 +273,79 @@ bowl.
 #
 @desc hallway =
  Doors line both walls.  At the end of the room is an elevator.
+#
+# Let's drop a mob (like it's hot)
+# Create the mobile. This is its start location.
+#
+@create/drop neighbor : mob.Mob
+#
+# Not aggressive.
+@set/agressive = false
+#
+# Set its home to this location.
+#
+@sethome neighbor = dru#04
+#
+@lock neighbor = get:false()
+#
+@set neighbor/get_err_msg = Please respect your neigbor's autonomy.
+#
+@set neighbor/desc_alive =
+ A friendly neighbor.
+#
+@set neighbor/desc_dead =
+ Your friendly neighbor has passed away.  R.I.P.
+#
+# We set the neighbor to send defeated neighbors back to their apartment.
+#
+@set neighbor/send_defeated_to = dru#02
+#
+@set neighbor/defeat_msg =
+ You fall to the ground, defeated.
+
+
+The world turns black.
+#
+@set neighbor/defeat_msg_room =
+ %s falls to the ground, defeated.
+#
+@set neighbor/weapon_ineffective_msg =
+ Your weapon causes no effect!
+#
+@set neighbor/hit_msg =
+ The neighbor howls in pain.
+#
+@set neighbor/death_msg =
+ The neighbor collapses in death.
+#
+# Give the neighbor some random echoes (echoed at irregular intervals)
+#
+#@set neighbor/irregular_msgs =
+ ["The neighbor shrieks.",
+  "The neighbor tries to hide, but where?!.",
+  "The neighbor looks pensively at the floor.",
+  "The neighbor blushes.",
+  "The neighbor feels bloated."]
+#
+# give the enemy a silly weapon
+#
+@create toe nail clipper;toe;nail;clipper:objects.Weapon
+#
+# Make the enemy's weapon good - hits at 70% of attacks, but not good at parrying.
+#
+@set toe nail clipper/hit = 0.7
+#
+@set toe nail clipper/parry = 0.1
+#
+@set toe nail clipper/damage = 5
+#
+# Actually give the enemy its weapon
+#
+@teleport/quiet toe = neighbor
+#
+# Start the mob
+#
+mobon neighbor
 #
 #------------------------------------------------------------
 #
