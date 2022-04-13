@@ -5,8 +5,7 @@
 #
 # This batchfile sets up Druidia.
 #
-# To load this file, place yourself in Limbo (room #2) and load the
-# file as user #1 with
+# Load this file as user #1 with:
 #
 #     @batchcommand world.batch_cmds
 #
@@ -20,8 +19,8 @@
 # |Screen    +----+                   +----+    01     |
 # |          |    |                   |    |           |
 # +----------+    +----+--------------+    +-----+-----+
-#                      |               \         |
-#                      |                 \       |
+#                      |                         |
+#                      |                         |
 # +----------+    +----+--------------+    +-----+-----+
 # | Elevator |    |                   |    | Apartment |
 # |    06    +----+    04 Hallway     +----+    02     |
@@ -29,7 +28,7 @@
 # +----+-----+    +----+--------------+    +-----+-----+
 #                      |                         |
 #                 +----+---+               +-----+-----+               
-#                 | Stairs |               |    Wash   |
+#                 | Stairs |               |   Water   |
 #                 |   05   |               |   Closet  |
 #                 |        |               |     03    |
 #                 +--------+               +-----------+
@@ -55,6 +54,9 @@
 #
 # We start building from limbo. Remember that every command in the batchfile
 # -must- be separated by at least one comment-line.
+#
+# Let's start building from Limbo.
+#
 @tel #2
 #
 # First, let's give Limbo a fun description.
@@ -85,10 +87,6 @@ It is impossible to measure the passage of time.
 #
 #------------------------------------------------------------
 #
-# Build Druidia.
-#
-#------------------------------------------------------------
-#
 # Build the Intro room.
 #
 #------------------------------------------------------------
@@ -112,15 +110,24 @@ It is impossible to measure the passage of time.
 # Describe the exit to Druidia.
 #
 @desc Druidia =
- Ahead lies |gDruidia|n.  Abandon all hope ye, who enter here.
+ A single door floats in the empty space of Limbo. As it drifts closer you see a
+simple brass sign on the wooden door. Engraved upon the sign is one word: 
+
+
+|gDruidia|n.
+
+
+Ahead lies your adventure. It beats staying here.
 #
-# now we actually go to the Druidia IntroRoom.
+# Now we actually go to the Druidia IntroRoom.
 #
 Druidia
 #
 # ... and describe it.
 #
-@desc
+@desc Introduction = 
+
+
  |gWelcome to Druidia!|n
 
 |gDo you want help with how to play? Write |yintro|g to get an 
@@ -149,10 +156,10 @@ Write '|ygive up|n' to abandon the quest.
 #
 @desc apartment =
  Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
-desk|n, whirring.  A |wsteel chair|n is tucked under the desk. Your bed
+desk|n, whirring. A |wsteel chair|n is tucked under the desk. Your bed
 is tightly made with just a sheet and an itchy wool blanket. At one end
 of your apartment is a kitchen unit. To the west is a small water
-closet and to the east is a door to the hallway.  Next to the exit is a
+closet and to the east is a door to the hallway. Next to the exit is a
 tall cabinet closet.
 #
 #
@@ -167,12 +174,25 @@ tall cabinet closet.
  An uncomfortable steel chair recessed into a track in the floor - probably
 to prevent theft.
 #
+@detail wall; walls =
+ The walls appear to be made of sheet steel. They are cold to the touch.
+#
+@detail floor = 
+ Simple gray carpet. It looks clean and easy to replace.
+#
+@detail ceiling = 
+ Flourescent lighting buzzes above you in recessed panels in the ceiling.
+#
+@detail kitchen unit;kitchen = 
+ A sink, two small burners, a microwave and a small refridgerator. They 
+appear clean and seldom used.
+#
 @create/drop workstation;computer
 #
 @desc workstation = 
  An old, beige computer. Two buttons and an LED display adorn the front 
 panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
-display reads |g66|n.  An asset tag is affixed to the side of the 
+display reads |g66|n. An asset tag is affixed to the side of the 
 workstation that reads
  
 PEACHTREES
@@ -180,16 +200,16 @@ PEACHTREES
 0000000001
 #
 # It's important to lock the workstation object or players will be able 
-# to pick it up and put it in their pocket ...
+# to pick it up and put it in their pocket.
 #
 @lock workstation = get:false()
 #
-# By setting the lock_msg attribute there will be a nicer error message 
+# By setting the lock_msg attribute there will be a nice error message 
 # if people try to pick up the workstation.
 #
 @set workstation/get_err_msg =
- The workstation is secured to the desk.  It appears to be property of
-Peachtrees.  I wouldn't take it if I were you.
+ The workstation is secured to the desk. It appears to be property of
+Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
@@ -209,10 +229,23 @@ wall with theft-proof screws.
 
  |rEVACUATION ROUTE|n
 
-In case of fire, do not use elevators.  Proceed to ground level using 
+In case of fire, do not use elevators. Proceed to ground level using 
 the stairs at the north end of the hallway.
 
 
+#
+@dig Water Closet;dru#03
+ : rooms.Room
+#
+# Open an exit to the water closet. We don't do this in the @dig 
+# command since we want to describe the exit.
+#
+@open sliding door;sliding;door = dru#03
+#
+desc sliding door =
+ A simple sliding steel door separates the water closet from the
+rest of the apartment.
+#
 #------------------------------------------------------------
 #
 # The water closet.
@@ -221,13 +254,15 @@ the stairs at the north end of the hallway.
 #
 # You will need a place to do important things.
 #
-@dig/teleport water closet;water;closet;dru#03
- : rooms.Room
- = water closet;water;closet
+water closet
 #
 # Open an exit back to the apartment.
 #
-@open apartment = dru#02
+@open sliding door = dru#02
+#
+desc sliding door =
+ A simple sliding steel door separates the water closet from the
+rest of the apartment.
 #
 @desc water closet =
  Like the rest of the apartment, the water closet is a steel affair.
@@ -257,6 +292,16 @@ bowl.
 @detail medicine cabinet;medicine;cabinet = 
  Behind the mirror is a medicine cabinet with three shelves.
 #
+@detail walls =
+ The walls of the water closet are steel. The frequent high humidty in this
+room has created a light film of rust on the walls.
+#
+@detail ceiling = 
+ Flourescent lighting buzzes above you in recessed panels in the ceiling.
+#
+@detail floor = 
+ Cold, bare steel. The floor is slightly lower than the floor in the rest 
+of your apartment. There is a drain in the middle of the floor.
 #
 #------------------------------------------------------------
 #
