@@ -274,13 +274,17 @@ bowl.
 @desc hallway =
  Doors line both walls.  At the end of the room is an elevator.
 #
+# We lock the apartment exit for the mob, so it won't wander into your home..
+#
+@lock apartment = traverse:has_account()
+#
 # Let's drop a mob (like it's hot)
 # Create the mobile. This is its start location.
 #
 @create/drop neighbor : mob.Mob
 #
 # Not aggressive.
-@set/agressive = false
+@set neighbor/agressive = false
 #
 # Set its home to this location.
 #
