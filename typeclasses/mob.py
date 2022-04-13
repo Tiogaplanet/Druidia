@@ -14,7 +14,6 @@ from evennia import Command, CmdSet
 from evennia import logger
 
 
-
 class CmdMobOnOff(Command):
     """
     Activates/deactivates Mob
@@ -158,7 +157,9 @@ class Mob(Object):
 
         self.db.death_msg = "After the last hit %s evaporates." % self.key
         self.db.hit_msg = "%s wails, shudders and writhes." % self.key
-        self.db.irregular_msgs = ["the enemy looks about.", "the enemy changes stance."]
+        self.db.irregular_msgs = [
+            "the enemy looks about.", "the enemy changes stance."
+        ]
 
     def _set_ticker(self, interval, hook_key, stop=False):
         """
@@ -189,16 +190,16 @@ class Mob(Object):
         last_hook_key = self.db.last_hook_key
         if last_interval and last_hook_key:
             # we have a previous subscription, kill this first.
-            TICKER_HANDLER.remove(
-                interval=last_interval, callback=getattr(self, last_hook_key), idstring=idstring
-            )
+            TICKER_HANDLER.remove(interval=last_interval,
+                                  callback=getattr(self, last_hook_key),
+                                  idstring=idstring)
         self.db.last_ticker_interval = interval
         self.db.last_hook_key = hook_key
         if not stop:
             # set the new ticker
-            TICKER_HANDLER.add(
-                interval=interval, callback=getattr(self, hook_key), idstring=idstring
-            )
+            TICKER_HANDLER.add(interval=interval,
+                               callback=getattr(self, hook_key),
+                               idstring=idstring)
 
     def _find_target(self, location):
         """
@@ -213,8 +214,7 @@ class Mob(Object):
 
         """
         targets = [
-            obj
-            for obj in location.contents_get(exclude=self)
+            obj for obj in location.contents_get(exclude=self)
             if obj.has_account and not obj.is_superuser
         ]
         return targets[0] if targets else None
@@ -313,7 +313,9 @@ class Mob(Object):
                 self.start_attacking()
                 return
         # no target found, look for an exit.
-        exits = [exi for exi in self.location.exits if exi.access(self, "traverse")]
+        exits = [
+            exi for exi in self.location.exits if exi.access(self, "traverse")
+        ]
         if exits:
             # randomly pick an exit
             exit = random.choice(exits)
@@ -338,7 +340,9 @@ class Mob(Object):
                 self.start_attacking()
                 return
         # no targets found, scan surrounding rooms
-        exits = [exi for exi in self.location.exits if exi.access(self, "traverse")]
+        exits = [
+            exi for exi in self.location.exits if exi.access(self, "traverse")
+        ]
         if exits:
             # scan the exits destination for targets
             for exit in exits:
@@ -372,12 +376,15 @@ class Mob(Object):
         # we use the same attack commands as defined in
         # objects.Weapon, assuming that
         # the mob is given a Weapon to attack with.
-        attack_cmd = random.choice(("thrust", "pierce", "stab", "slash", "chop"))
+        attack_cmd = random.choice(
+            ("thrust", "pierce", "stab", "slash", "chop"))
         self.execute_cmd("%s %s" % (attack_cmd, target))
 
         if target.db.health is None:
             # This is not an attackable target
-            logger.log_err(f"{self.key} found {target} had an `health` attribute of `None`.")
+            logger.log_err(
+                f"{self.key} found {target} had an `health` attribute of `None`."
+            )
             return
 
         # analyze the current state
@@ -385,14 +392,14 @@ class Mob(Object):
             # we reduced the target to <= 0 health. Move them to the
             # defeated room
             target.msg(self.db.defeat_msg)
-            self.location.msg_contents(self.db.defeat_msg_room % target.key, exclude=target)
+            self.location.msg_contents(self.db.defeat_msg_room % target.key,
+                                       exclude=target)
             send_defeated_to = search_object(self.db.send_defeated_to)
             if send_defeated_to:
                 target.move_to(send_defeated_to[0], quiet=True)
             else:
-                logger.log_err(
-                    "Mob: mob.db.send_defeated_to not found: %s" % self.db.send_defeated_to
-                )
+                logger.log_err("Mob: mob.db.send_defeated_to not found: %s" %
+                               self.db.send_defeated_to)
 
     # response methods - called by other objects
 
