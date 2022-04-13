@@ -234,17 +234,28 @@ the stairs at the north end of the hallway.
 
 
 #
+# Create the entrance to the water closet.
+#
 @dig Water Closet;dru#03
  : rooms.Room
 #
 # Open an exit to the water closet. We don't do this in the @dig 
 # command since we want to describe the exit.
 #
-@open sliding door;sliding;door = dru#03
+@open sliding door;sliding = dru#03
 #
 desc sliding door =
  A simple sliding steel door separates the water closet from the
 rest of the apartment.
+#
+# Create the entrance to the hallway outside the apartment.
+#
+@dig Hallway;hall;dru#04
+ : rooms.Room
+ = front door;front
+#
+@desc front door = 
+ A sliding stel door that recesses into the wall.
 #
 #------------------------------------------------------------
 #
@@ -282,11 +293,11 @@ in the wall above the toilet.
  You see yourself in the mirror.
 #
 @detail shower stall;shower;stall =
- It could use a cleaning.  It looks rusty and old.
+ It could use a cleaning. It looks rusty and old.
 #
 @detail basin =
- The basin looks pretty old.  The steel bowl is topped with handles
-for |rhot|n and |bcold|n water.  The faucet is a simple steel arch into the
+ The basin looks pretty old. The steel bowl is topped with handles for
+|rhot|n and |bcold|n water. The faucet is a simple steel arch into the
 bowl.
 #
 @detail medicine cabinet;medicine;cabinet = 
@@ -297,7 +308,8 @@ bowl.
 room has created a light film of rust on the walls.
 #
 @detail ceiling = 
- Flourescent lighting buzzes above you in recessed panels in the ceiling.
+ Flourescent lighting buzzes above you in recessed panels in the ceiling. Near
+the shower stall is an extractor fan.
 #
 @detail floor = 
  Cold, bare steel. The floor is slightly lower than the floor in the rest 
@@ -309,12 +321,14 @@ of your apartment. There is a drain in the middle of the floor.
 #
 #------------------------------------------------------------
 #
-# Go back to the apartment...
-@tel dru#02
+tel dru#04
 #
-@dig/teleport hallway;hall;dru#04
- : rooms.Room
- = hallway;hall
+# Open an exit back to the apartment.
+#
+@open apartment door;apartment = dru#02
+#
+@desc apartment door = 
+ The door is labelled with the number |w01|n.
 #
 @desc hallway =
  Doors line both walls.  At the end of the room is an elevator.
