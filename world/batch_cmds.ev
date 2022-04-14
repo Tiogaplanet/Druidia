@@ -343,7 +343,7 @@ tel dru#04
 @create/drop neighbor : mob.Mob
 #
 # Not aggressive.
-@set neighbor/agressive = false
+#@set neighbor/aggressive = false
 #
 # Set its home to this location.
 #

@@ -114,8 +114,8 @@ class Mob(Object):
         self.cmdset.add(MobCmdSet, permanent=True)
         # Main AI flags. We start in dead mode so we don't have to
         # chase the mob around when building.
-        self.db.patrolling = True
-        self.db.aggressive = True
+        self.db.patrolling = False
+        self.db.aggressive = False
         self.db.immortal = False
         # db-store if it is dead or not
         self.db.is_dead = True
