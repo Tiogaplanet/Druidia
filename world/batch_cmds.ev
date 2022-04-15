@@ -343,7 +343,10 @@ tel dru#04
 @create/drop neighbor : mob.Mob
 #
 # Not aggressive.
-#@set neighbor/aggressive = False
+@set neighbor/aggressive = False
+#
+# Not patrolling either.
+@set neighbor/patrolling = False
 #
 # Set its home to this location.
 #
@@ -383,7 +386,7 @@ The world turns black.
 #
 # Give the neighbor some random echoes (echoed at irregular intervals)
 #
-#@set neighbor/irregular_msgs =
+@set neighbor/irregular_msgs =
  ["The neighbor shrieks.",
   "The neighbor tries to hide, but where?!.",
   "The neighbor looks pensively at the floor.",
