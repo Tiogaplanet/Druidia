@@ -5,8 +5,7 @@
 #
 # This batchfile sets up Druidia.
 #
-# To load this file, place yourself in Limbo (room #2) and load the
-# file as user #1 with
+# Load this file as user #1 with:
 #
 #     @batchcommand world.batch_cmds
 #
@@ -20,8 +19,8 @@
 # |Screen    +----+                   +----+    01     |
 # |          |    |                   |    |           |
 # +----------+    +----+--------------+    +-----+-----+
-#                      |               \         |
-#                      |                 \       |
+#                      |                         |
+#                      |                         |
 # +----------+    +----+--------------+    +-----+-----+
 # | Elevator |    |                   |    | Apartment |
 # |    06    +----+    04 Hallway     +----+    02     |
@@ -29,9 +28,9 @@
 # +----+-----+    +----+--------------+    +-----+-----+
 #                      |                         |
 #                 +----+---+               +-----+-----+               
-#                 | Stairs |               | Bathroom  |
-#                 |   05   |               |    03     |
-#                 |        |               |           |
+#                 | Stairs |               |   Water   |
+#                 |   05   |               |   Closet  |
+#                 |        |               |     03    |
 #                 +--------+               +-----------+
 #
 # The exits from Limbo to Intro and Apartment are one-way exits. The
@@ -55,6 +54,9 @@
 #
 # We start building from limbo. Remember that every command in the batchfile
 # -must- be separated by at least one comment-line.
+#
+# Let's start building from Limbo.
+#
 @tel #2
 #
 # First, let's give Limbo a fun description.
@@ -85,11 +87,9 @@ It is impossible to measure the passage of time.
 #
 #------------------------------------------------------------
 #
-# Build Druidia.
+# Build the Intro room.
 #
 #------------------------------------------------------------
-#
-# Build the Intro room.
 #
 # Note the unique alias dru#XX we give each room. This is used to
 # easily reference this object from other objects in the build script
@@ -110,15 +110,24 @@ It is impossible to measure the passage of time.
 # Describe the exit to Druidia.
 #
 @desc Druidia =
- Ahead lies |gDruidia|n.  Abandon all hope ye, who enter here.
+ A single door floats in the empty space of Limbo. As it drifts closer you see a
+simple brass sign on the wooden door. Engraved upon the sign is one word: 
+
+
+|gDruidia|n.
+
+
+Ahead lies your adventure. It beats staying here.
 #
-# now we actually go to the Druidia IntroRoom.
+# Now we actually go to the Druidia IntroRoom.
 #
 Druidia
 #
 # ... and describe it.
 #
-@desc
+@desc Introduction = 
+
+
  |gWelcome to Druidia!|n
 
 |gDo you want help with how to play? Write |yintro|g to get an 
@@ -132,7 +141,6 @@ Write '|ygive up|n' to abandon the quest.
 |gWrite 'begin' to start your quest!|n
 
 
-#
 #------------------------------------------------------------
 #
 # Your apartment.
@@ -147,13 +155,16 @@ Write '|ygive up|n' to abandon the quest.
 #
 #
 @desc apartment =
- Your apartment is cold and dim.  A |wworkstation|n sits atop a |wsteel desk|n,
-whirring.  A |wsteel chair|n is tucked under the desk.  Your bed is tightly made 
-with just a sheet and an itchy wool blanket.
+ Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
+desk|n, whirring. A |wsteel chair|n is tucked under the desk. Your bed
+is tightly made with just a sheet and an itchy wool blanket. At one end
+of your apartment is a kitchen unit. To the west is a small water
+closet and to the east is a door to the hallway. Next to the exit is a
+tall cabinet closet.
 #
 #
 # Mood-setting details to look at. This makes use of the custom look
-# command in use on tutorial rooms to display extra text strings. It
+# command in use on Room typeclass to display extra text strings. It
 # adds the detail as a dictionary Attribute on the room.
 #
 @detail steel desk;desk =
@@ -163,47 +174,266 @@ with just a sheet and an itchy wool blanket.
  An uncomfortable steel chair recessed into a track in the floor - probably
 to prevent theft.
 #
+@detail wall; walls =
+ The walls appear to be made of sheet steel. They are cold to the touch.
+#
+@detail floor = 
+ Simple gray carpet. It looks clean and easy to replace.
+#
+@detail ceiling = 
+ Flourescent lighting buzzes above you in recessed panels in the ceiling.
+#
+@detail kitchen unit;kitchen = 
+ A sink, two small burners, a microwave and a small refridgerator. They 
+appear clean and seldom used.
+#
 @create/drop workstation;computer
 #
 @desc workstation = 
- An old, beige computer. Two buttons and an LED dsplay adorn the front 
+ An old, beige computer. Two buttons and an LED display adorn the front 
 panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
-display reads |g66|n.  An asset tag is affixed to the side of the 
+display reads |g66|n. An asset tag is affixed to the side of the 
 workstation that reads
  
 PEACHTREES
   ASSET #
 0000000001
 #
-# It's important to lock the workstation object or players will be able to
-# pick it up and put it in their pocket ...
+# It's important to lock the workstation object or players will be able 
+# to pick it up and put it in their pocket.
 #
 @lock workstation = get:false()
 #
-# By setting the lock_msg attribute there will be a nicer error message if people
-# try to pick up the workstation.
+# By setting the lock_msg attribute there will be a nice error message 
+# if people try to pick up the workstation.
 #
 @set workstation/get_err_msg =
- The workstation is secured to the desk.  It appears to be property of
- Peachtrees.  I wouldn't take it if I were you.
+ The workstation is secured to the desk. It appears to be property of
+Peachtrees. I wouldn't take it if I were you.
+#
+# To meet building code, show an evacuation route.
+#
+@create/drop Evacuation route;route;evacuation : objects.Readable
+#
+@desc Evacuation route =
+ The evacuation route is engraved on sheet steel and secured to the 
+wall with theft-proof screws. 
+#
+@lock Evacuation route = get:false()
+#
+@set Evacuation route/get_err_msg = 
+ The evacuation route is affixed to the wall for legal reasons.
+#
+@set Evacuation route/readable_text =
+
+
+ |rEVACUATION ROUTE|n
+
+In case of fire, do not use elevators. Proceed to ground level using 
+the stairs at the north end of the hallway.
+
+
+#
+# Create the entrance to the water closet.
+#
+@dig Water Closet;dru#03
+ : rooms.Room
+#
+# Open an exit to the water closet. We don't do this in the @dig 
+# command since we want to describe the exit.
+#
+@open sliding door;sliding = dru#03
+#
+desc sliding door =
+ A simple sliding steel door separates the water closet from the
+rest of the apartment.
+#
+# Create the entrance to the hallway outside the apartment.
+#
+@dig Hallway;hall;dru#04
+ : rooms.Room
+ = front door;front
+#
+@desc front door = 
+ A sliding stel door that recesses into the wall.
 #
 #------------------------------------------------------------
 #
-# Outro room
+# The water closet.
 #
-# Called when you are leaving Druidia. 
 #------------------------------------------------------------
 #
-@dig/teleport Leaving Druidia;dru#03
+# You will need a place to do important things.
+#
+water closet
+#
+# Open an exit back to the apartment.
+#
+@open sliding door = dru#02
+#
+desc sliding door =
+ A simple sliding steel door separates the water closet from the
+rest of the apartment.
+#
+@desc water closet =
+ Like the rest of the apartment, the water closet is a steel affair.
+At least it has a |wbidet|n. All civilized societies use bidets. A 
+|wtoilet|n is affixed to the wall next to the bidet. A |wshower stall|n is
+here along with a |wsink basin|n. A |wmirror|n hides a |wmedicine cabinet|n.
+#
+@detail bidet =
+ A steel bidet is secured to the wall.  it has handles for |rhot|n and
+|bcold|n water and a spray handle at the end of a flexible steel hose.
+#
+@detail toilet =
+ A steel toilet is secured to the wall.  A single button is mounted
+in the wall above the toilet.
+#
+@detail mirror =
+ You see yourself in the mirror.
+#
+@detail shower stall;shower;stall =
+ It could use a cleaning. It looks rusty and old.
+#
+@detail basin =
+ The basin looks pretty old. The steel bowl is topped with handles for
+|rhot|n and |bcold|n water. The faucet is a simple steel arch into the
+bowl.
+#
+@detail medicine cabinet;medicine;cabinet = 
+ Behind the mirror is a medicine cabinet with three shelves.
+#
+@detail walls =
+ The walls of the water closet are steel. The frequent high humidty in this
+room has created a light film of rust on the walls.
+#
+@detail ceiling = 
+ Flourescent lighting buzzes above you in recessed panels in the ceiling. Near
+the shower stall is an extractor fan.
+#
+@detail floor = 
+ Cold, bare steel. The floor is slightly lower than the floor in the rest 
+of your apartment. There is a drain in the middle of the floor.
+#
+#------------------------------------------------------------
+#
+# The hallway.
+#
+#------------------------------------------------------------
+#
+tel dru#04
+#
+# Open an exit back to the apartment.
+#
+@open apartment door;apartment = dru#02
+#
+@desc apartment door = 
+ The door is labelled with the number |w01|n.
+#
+@desc hallway =
+ Doors line both walls.  At the end of the room is an elevator.
+#
+# We lock the apartment exit for the mob, so it won't wander into your home..
+#
+@lock apartment = traverse:has_account()
+#
+# Let's drop a mob (like it's hot)
+# Create the mobile. This is its start location.
+#
+@create/drop neighbor : mob.Mob
+#
+# Not aggressive.
+@set neighbor/aggressive = False
+#
+# Slow down his patrolling pace.  He's much too busy.
+@set neighbor/patrolling_pace = 30
+#
+# Set its home to this location.
+#
+@sethome neighbor = dru#04
+#
+@lock neighbor = get:false()
+#
+@set neighbor/get_err_msg = Please respect your neighbor's autonomy.
+#
+@set neighbor/desc_alive =
+ A friendly neighbor.
+#
+@set neighbor/desc_dead =
+ Your friendly neighbor has passed away.  R.I.P.
+#
+# We set the neighbor to send defeated neighbors back to their apartment.
+#
+@set neighbor/send_defeated_to = dru#02
+#
+@set neighbor/defeat_msg =
+ You fall to the ground, defeated.
+
+
+The world turns black.
+#
+@set neighbor/defeat_msg_room =
+ %s falls to the ground, defeated.
+#
+@set neighbor/weapon_ineffective_msg =
+ Your weapon causes no effect!
+#
+@set neighbor/hit_msg =
+ The neighbor howls in pain.
+#
+@set neighbor/death_msg =
+ The neighbor collapses in death.
+#
+# Give the neighbor some random echoes (echoed at irregular intervals)
+#
+@set neighbor/irregular_msgs =
+ ["The neighbor shrieks.",
+  "The neighbor tries to hide, but where?!.",
+  "The neighbor looks pensively at the floor.",
+  "The neighbor blushes.",
+  "The neighbor feels bloated."]
+#
+# give the enemy a silly weapon
+#
+@create toe nail clipper;toe;nail;clipper:objects.Weapon
+#
+# Make the enemy's weapon good - hits at 70% of attacks, but not good at parrying.
+#
+@set toe nail clipper/hit = 0.7
+#
+@set toe nail clipper/parry = 0.1
+#
+@set toe nail clipper/damage = 5
+#
+# Actually give the enemy its weapon
+#
+@teleport/quiet toe = neighbor
+#
+# Start the mob
+#
+mobon neighbor
+#
+#------------------------------------------------------------
+#
+# Outro - leaving Druidia.
+#
+# This cleans all temporary attributes set on the Character,
+# removes weapons and items etc. This room is only accessible
+# by using the "give up" command.
+#
+#------------------------------------------------------------
+#
+@dig/teleport Leaving Druidia;dru#05
  : rooms.OutroRoom
- = exit Druidia;exit;back, start again;start
 #
-@desc
+@desc Leaving Druidia =
+
+
  You are leaving Druidia. Please come back later.
+ 
+ You can quit or start over.
 #
-#
-# ...and exit.
-@open exit back to Limbo;limbo;exit;back = #2
+@open start over;start;over = dru#01
 #
 # STT: Unedited beyond here.
 #@create/drop Wooden sign;sign : tutorial_world.objects.TutorialReadable

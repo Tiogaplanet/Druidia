@@ -115,9 +115,30 @@ PEACHTREES
 #
 @set workstation/get_err_msg =
  The workstation is secured to the desk.  It appears to be property of
- Peachtrees.  I wouldn't take it if I were you.
+Peachtrees.  I wouldn't take it if I were you.
 #
+# To meet building code, show an evacuation route.
 #
+@create/drop Evacuation route;route;evacuation : objects.Readable
+#
+@desc Evacuation route =
+ The evacuation route is engraved on sheet steel and secured to the 
+wall with theft-proof screws. 
+#
+@lock Evacuation route = get:false()
+#
+@set Evacuation route/get_err_msg = 
+ The evacuation route is affixed to the wall for legal reasons.
+#
+@set Evacuation route/readable_text =
+
+
+ |rEVACUATION ROUTE|n
+
+In case of fire, do not use elevators.  Proceed to ground level using 
+the stairs at the north end of the hallway.
+
+
 #------------------------------------------------------------
 #
 # Outro - end of the test case.
@@ -127,15 +148,12 @@ PEACHTREES
 #
 #------------------------------------------------------------
 #
-@dig/teleport Leaving Druidia;dru#03
+@dig Leaving Druidia;dru#03
  : rooms.OutroRoom
  = exit Druidia;exit;back, start again;start
 #
 @desc
  You are leaving Druidia. Please come back later.
-#
-@open exit = #2
-# This text is what the @tutorial command finds and displays.
 #
 @open exit back to Limbo;limbo;exit;back = #2
 #
