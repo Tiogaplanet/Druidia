@@ -345,8 +345,8 @@ tel dru#04
 # Not aggressive.
 @set neighbor/aggressive = False
 #
-# Not patrolling either.
-@set neighbor/patrolling = False
+# Slow down his patrolling pace.  He's much too busy.
+@set neighbor/patrolling_pace = 30
 #
 # Set its home to this location.
 #
