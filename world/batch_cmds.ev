@@ -23,43 +23,85 @@
 #                      |                         |
 # +----------+    +----+--------------+    +-----+-----+
 # | Elevator |    |                   |    | Apartment |
-# |    06    +----+    04 Hallway     +----+    02     |
+# |    07    +----+    04 Hallway     +----+    02     |
 # |          |    |                   |    |           |
 # +----+-----+    +----+--------------+    +-----+-----+
-#                      |                         |
-#                 +----+---+               +-----+-----+               
-#                 | Stairs |               |   Water   |
-#                 |   05   |               |   Closet  |
-#                 |        |               |     03    |
+#                      |          |              |
+#                 +----+---+      |        +-----+-----+               
+#     Outro       | Stairs |    Neighbor's |   Water   |
+#      08   ------|   06   |    apartment  |   Closet  |
+#                 |        |       05      |     03    |
 #                 +--------+               +-----------+
 #
-# The exits from Limbo to Intro and Apartment are one-way exits. The
-# only way back to Limbo for the normal user is a locked door in the
-# hallway, which is also a one-way door.  The exit from Intro to 
-# Apartment is also a one-way exit.
+# The exits from Limbo to Intro and Intro to Apartment are one-way 
+# exits. The only way back to Limbo for the normal user is a locked door
+# in the hallway, which is also a one-way door.
 #
-# There are a few ways we could have gone about building the above
-# layout; one is to do all the digging in one go first, then go back
-# and add all the details. The advantage of this is that the area is
-# already there and you can more easily jump ahead in the build file
-# to the detail work when you want to update things later. In this
-# file we will however build and design it all in sequence; room by
-# room. This makes it easier to keep an overview of what is going on
-# in each room, tie things to parents, etc.  When building your own
-# world you might want to separate your world into a lot more
-# individual batch files (maybe one for just a few rooms) for easy
-# handling. The numbers mark the order of construction and also the
-# unique alias-ids given to each room, to allow safe teleporting and
-# linking between them.
+# For the sake of organizing this file, all rooms are created first, 
+# then we move through each one, building out the descriptions and
+# details.
 #
-# We start building from limbo. Remember that every command in the batchfile
-# -must- be separated by at least one comment-line.
+# We start building from limbo. Remember that every command in the 
+# batchfile -must- be separated by at least one comment-line.
 #
-# Let's start building from Limbo.
+#-----------------------------------------------------------------------
+#
+# Let's start from Limbo and create all the rooms and exits. We do this 
+# in one pass to ease spatial understanding of how all the rooms are
+# connected.
+#
+#-----------------------------------------------------------------------
+#
 #
 @tel #2
 #
-# First, let's give Limbo a fun description.
+@dig/teleport Introduction;dru#01
+ : rooms.IntroRoom
+ = Druidia
+#
+@dig/teleport Apartment;dru#02
+ : rooms.Room
+ = begin adventure;begin;start
+#
+@dig Water Closet;dru#03
+ : rooms.Room
+ = sliding door;sliding,sliding door;sliding
+#
+@dig/teleport Hallway;dru#04
+ : rooms.Room
+ = apartment door;apartment,apartment door;apartment
+#
+@open wooden door;wooden = #2
+#
+@dig Neighbor's Apartment;dru#05
+ : rooms.Room
+ = stuck door;stuck,stuck door;stuck
+#
+@dig/teleport Stairs;dru#06
+ : rooms.Room
+ = push door;push,pull door;pull
+#
+@open up,down = dru#06
+#
+@dig Leaving Druidia;dru#08
+ : rooms.OutroRoom
+ = Leaving Druidia;leaving;quit;big ol quitter
+#
+pull door
+#
+@dig Elevator;dru#07
+ : rooms.Room
+ = elevator doors;elevator,elevator doors;elevator
+#
+#-----------------------------------------------------------------------
+#
+# Now back to Limbo and start describing and placing everything in the
+# universe.
+#
+#-----------------------------------------------------------------------
+#
+@tel #2
+#
 @desc Limbo =
 ----------------------------------- = Limbo = ----------------------------------
      
@@ -85,47 +127,31 @@ It is impossible to measure the passage of time.
  
 ----------------------------------- = Limbo = ----------------------------------
 #
-#------------------------------------------------------------
-#
-# Build the Intro room.
-#
-#------------------------------------------------------------
-#
-# Note the unique alias dru#XX we give each room. This is used to
-# easily reference this object from other objects in the build script
-# without knowing the dbref. One empty line results in a line-break in
-# the game, whereas two lines create a new paragraph. The length of the
-# lines in the batchfile does not matter, in-game they will fill the
-# lines to the width as defined by the
-# player's client.
-#
-@dig Introduction;dru#01
- : rooms.IntroRoom
-#
-# Open an exit to Druidia. We don't do this in the @dig command since we
-# want to describe the exit.
-#
-@open Druidia;Dru = dru#01
-#
 # Describe the exit to Druidia.
 #
 @desc Druidia =
- A single door floats in the empty space of Limbo. As it drifts closer you see a
-simple brass sign on the wooden door. Engraved upon the sign is one word: 
+ A door floats in the empty space of Limbo. As it drifts closer you see 
+a simple brass sign on the wooden door. Engraved upon the sign is one 
+word: 
 
 
 |gDruidia|n.
 
 
 Ahead lies your adventure. It beats staying here.
+
+
+
 #
-# Now we actually go to the Druidia IntroRoom.
+#-----------------------------------------------------------------------
+#
+# Travel to the Intro room and describe it.
+#
+#-----------------------------------------------------------------------
 #
 Druidia
 #
-# ... and describe it.
-#
-@desc Introduction = 
+@desc dru#01 =
 
 
  |gWelcome to Druidia!|n
@@ -141,27 +167,30 @@ Write '|ygive up|n' to abandon the quest.
 |gWrite 'begin' to start your quest!|n
 
 
-#------------------------------------------------------------
 #
-# Your apartment.
+# Describe the exit to the apartment.
 #
-#------------------------------------------------------------
+@desc begin adventure = 
+ An odd open door appears to be standing free here.  Through the door
+you see what looks like someone's apartment.
+#
+#-----------------------------------------------------------------------
+#
+# Travel to the player's apartment and describe it.
+#
+#-----------------------------------------------------------------------
+#
+begin adventure
 #
 # This room is where every character starts.
 #
-@dig/teleport Apartment;apartment;dru#02
- : rooms.Room
- = begin adventure;begin;start
-#
-#
-@desc apartment =
+@desc dru#02 = 
  Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
 desk|n, whirring. A |wsteel chair|n is tucked under the desk. Your bed
 is tightly made with just a sheet and an itchy wool blanket. At one end
 of your apartment is a kitchen unit. To the west is a small water
 closet and to the east is a door to the hallway. Next to the exit is a
 tall cabinet closet.
-#
 #
 # Mood-setting details to look at. This makes use of the custom look
 # command in use on Room typeclass to display extra text strings. It
@@ -213,18 +242,18 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop Evacuation route;route;evacuation : objects.Readable
+@create/drop evacuation route;route;evacuation : objects.Readable
 #
-@desc Evacuation route =
+@desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 
 wall with theft-proof screws. 
 #
-@lock Evacuation route = get:false()
+@lock evacuation route = get:false()
 #
-@set Evacuation route/get_err_msg = 
+@set evacuation route/get_err_msg = 
  The evacuation route is affixed to the wall for legal reasons.
 #
-@set Evacuation route/readable_text =
+@set evacuation route/readable_text =
 
 
  |rEVACUATION ROUTE|n
@@ -234,48 +263,32 @@ the stairs at the north end of the hallway.
 
 
 #
-# Create the entrance to the water closet.
+# Describe the apartment door.
 #
-@dig Water Closet;dru#03
- : rooms.Room
+@desc apartment door = 
+ A sliding steel door that recesses into the wall.
 #
-# Open an exit to the water closet. We don't do this in the @dig 
-# command since we want to describe the exit.
-#
-@open sliding door;sliding = dru#03
+# Describe the door to the water closet.
 #
 desc sliding door =
  A simple sliding steel door separates the water closet from the
 rest of the apartment.
 #
-# Create the entrance to the hallway outside the apartment.
+#-----------------------------------------------------------------------
 #
-@dig Hallway;hall;dru#04
- : rooms.Room
- = front door;front
+# Travel to the water closet and describe it.
 #
-@desc front door = 
- A sliding stel door that recesses into the wall.
-#
-#------------------------------------------------------------
-#
-# The water closet.
-#
-#------------------------------------------------------------
+#-----------------------------------------------------------------------
 #
 # You will need a place to do important things.
 #
-water closet
-#
-# Open an exit back to the apartment.
-#
-@open sliding door = dru#02
+sliding door
 #
 desc sliding door =
  A simple sliding steel door separates the water closet from the
 rest of the apartment.
 #
-@desc water closet =
+@desc dru#03 = 
  Like the rest of the apartment, the water closet is a steel affair.
 At least it has a |wbidet|n. All civilized societies use bidets. A 
 |wtoilet|n is affixed to the wall next to the bidet. A |wshower stall|n is
@@ -315,30 +328,32 @@ the shower stall is an extractor fan.
  Cold, bare steel. The floor is slightly lower than the floor in the rest 
 of your apartment. There is a drain in the middle of the floor.
 #
-#------------------------------------------------------------
+#-----------------------------------------------------------------------
 #
-# The hallway.
+# Travel to the hallway and describe it.
 #
-#------------------------------------------------------------
+#-----------------------------------------------------------------------
 #
-tel dru#04
+sliding door
 #
-# Open an exit back to the apartment.
+apartment door
 #
-@open apartment door;apartment = dru#02
+@desc dru#04 = 
+ Doors line both walls.  At the end of the room is an elevator.
 #
 @desc apartment door = 
  The door is labelled with the number |w01|n.
 #
-@desc hallway =
- Doors line both walls.  At the end of the room is an elevator.
+@desc stuck door =
+ It appears to be the door to your neighbor's apartment - and it's
+stuck.
 #
 # We lock the apartment exit for the mob, so it won't wander into your home..
 #
-@lock apartment = traverse:has_account()
+@lock apartment door = traverse:has_account()
 #
-# Let's drop a mob (like it's hot)
-# Create the mobile. This is its start location.
+# Create the mobile representing the player's mobile. It will start in
+# the hallway.
 #
 @create/drop neighbor : mob.Mob
 #
@@ -413,7 +428,44 @@ The world turns black.
 #
 mobon neighbor
 #
-#------------------------------------------------------------
+#-----------------------------------------------------------------------
+#
+# Travel to the neighbor's apartment and describe it.
+#
+#-----------------------------------------------------------------------
+#
+stuck door
+#
+@desc dru#05 = 
+ It looks just like yours.
+#
+#-----------------------------------------------------------------------
+#
+# Travel to the stairs and describe them.
+#
+#-----------------------------------------------------------------------
+#
+stuck door
+#
+push door
+#
+@desc dru#06 = 
+ They seem to go on forever.
+#
+#-----------------------------------------------------------------------
+#
+# Travel to the elevator and describe it.
+#
+#-----------------------------------------------------------------------
+#
+pull door
+#
+elevator doors
+#
+@desc dru#07 =
+ Gross.
+#
+#-----------------------------------------------------------------------
 #
 # Outro - leaving Druidia.
 #
@@ -421,10 +473,7 @@ mobon neighbor
 # removes weapons and items etc. This room is only accessible
 # by using the "give up" command.
 #
-#------------------------------------------------------------
-#
-@dig/teleport Leaving Druidia;dru#05
- : rooms.OutroRoom
+#-----------------------------------------------------------------------
 #
 @desc Leaving Druidia =
 
@@ -434,6 +483,7 @@ mobon neighbor
  You can quit or start over.
 #
 @open start over;start;over = dru#01
+#
 #
 # STT: Unedited beyond here.
 #@create/drop Wooden sign;sign : tutorial_world.objects.TutorialReadable
