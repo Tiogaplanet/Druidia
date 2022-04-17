@@ -188,9 +188,10 @@ begin adventure
  Your apartment is cold and dim. A |wworkstation|n sits atop a |wsteel 
 desk|n, whirring. A |wsteel chair|n is tucked under the desk. Your bed
 is tightly made with just a sheet and an itchy wool blanket. At one end
-of your apartment is a kitchen unit. To the west is a small water
-closet and to the east is a door to the hallway. Next to the exit is a
-tall cabinet closet.
+of your apartment is a kitchen unit. Sounds from the city filter faintly
+through the apartment's only window. To the west is a small water closet
+and to the east is a door to the hallway. Next to the exit is a tall 
+cabinet closet.
 #
 # Mood-setting details to look at. This makes use of the custom look
 # command in use on Room typeclass to display extra text strings. It
@@ -204,13 +205,16 @@ tall cabinet closet.
 to prevent theft.
 #
 @detail wall; walls =
- The walls appear to be made of sheet steel. They are cold to the touch.
+ The walls appear to be made of sheet steel. They are cold to the 
+touch. Next to the apartment door is a keycard reader.
 #
 @detail floor = 
  Simple gray carpet. It looks clean and easy to replace.
 #
 @detail ceiling = 
- Flourescent lighting buzzes above you in recessed panels in the ceiling.
+ Flourescent lighting buzzes above you in recessed panels in the 
+ceiling. A speach interface panel is embedded in the ceiling among the
+lights.
 #
 @detail kitchen unit;kitchen = 
  A sink, two small burners, a microwave and a small refridgerator. They 
@@ -242,7 +246,7 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop evacuation route;route;evacuation : objects.Readable
+@create/drop evacuation route;evac;evacuation;route : objects.Readable
 #
 @desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 
@@ -258,8 +262,8 @@ wall with theft-proof screws.
 
  |rEVACUATION ROUTE|n
 
-In case of fire, do not use elevators. Proceed to ground level using 
-the stairs at the north end of the hallway.
+In case of fire, do not use elevator. Proceed to ground level using the
+stairs at the north end of the hallway.
 
 
 #
@@ -271,8 +275,8 @@ the stairs at the north end of the hallway.
 # Describe the door to the water closet.
 #
 desc sliding door =
- A simple sliding steel door separates the water closet from the
-rest of the apartment.
+ A simple sliding steel door separates the water closet from the rest of
+the apartment.
 #
 #-----------------------------------------------------------------------
 #
@@ -285,12 +289,12 @@ rest of the apartment.
 sliding door
 #
 desc sliding door =
- A simple sliding steel door separates the water closet from the
-rest of the apartment.
+ A simple sliding steel door separates the water closet from the rest of
+the apartment.
 #
 @desc dru#03 = 
- Like the rest of the apartment, the water closet is a steel affair.
-At least it has a |wbidet|n. All civilized societies use bidets. A 
+ Like the rest of the apartment, the water closet is a steel affair. At
+least it has a |wbidet|n. All civilized societies use bidets. A 
 |wtoilet|n is affixed to the wall next to the bidet. A |wshower stall|n is
 here along with a |wsink basin|n. A |wmirror|n hides a |wmedicine cabinet|n.
 #
@@ -330,7 +334,7 @@ of your apartment. There is a drain in the middle of the floor.
 #
 #-----------------------------------------------------------------------
 #
-# Travel to the hallway and describe it.
+# Travel to the hallway, set the controls on the room, then describe it.
 #
 #-----------------------------------------------------------------------
 #
@@ -338,8 +342,18 @@ sliding door
 #
 apartment door
 #
+# We will make a mob in this room, so add some controls to the exits.
+# Don't let the mob go into the player's apartment, and don't let it go
+# to Limbo.
+#
+@lock apartment door = traverse:has_account()
+#
+@lock wooden door = traverse:has_account()
+#
 @desc dru#04 = 
- Doors line both walls.  At the end of the room is an elevator.
+ Doors to other apartments line both walls. At the end of the room is an
+elevator. A strangely wooden door is here too. The sign next to it says
+"Janitor."
 #
 @desc apartment door = 
  The door is labelled with the number |w01|n.
@@ -348,19 +362,19 @@ apartment door
  It appears to be the door to your neighbor's apartment - and it's
 stuck.
 #
-# We lock the apartment exit for the mob, so it won't wander into your home..
+@desc wooden door =
+ The wooden door appears very out of place in this building made of so 
+much steel. The doorknob is made of brass.  It shines as if new.
 #
-@lock apartment door = traverse:has_account()
-#
-# Create the mobile representing the player's mobile. It will start in
-# the hallway.
+# Create the mobile representing the neighbor. It will start in the 
+# hallway.
 #
 @create/drop neighbor : mob.Mob
 #
 # Not aggressive.
 @set neighbor/aggressive = False
 #
-# Slow down his patrolling pace.  He's much too busy.
+# Slow down his patrolling pace.  He's much too busy by default.
 @set neighbor/patrolling_pace = 30
 #
 # Set its home to this location.
@@ -372,7 +386,8 @@ stuck.
 @set neighbor/get_err_msg = Please respect your neighbor's autonomy.
 #
 @set neighbor/desc_alive =
- A friendly neighbor.
+ A friendly neighbor, though appearing to be a little agitated. The 
+neighbor's door is stuck open. 
 #
 @set neighbor/desc_dead =
  Your friendly neighbor has passed away.  R.I.P.
@@ -437,11 +452,11 @@ mobon neighbor
 stuck door
 #
 @desc dru#05 = 
- It looks just like yours.
+ It looks just like yours except there is no water closet. That's odd.
 #
 #-----------------------------------------------------------------------
 #
-# Travel to the stairs and describe them.
+# Travel to the stairs, set controls, and describe the room.
 #
 #-----------------------------------------------------------------------
 #
@@ -449,8 +464,10 @@ stuck door
 #
 push door
 #
+@lock Leaving Druidia = traverse:has_account()
+#
 @desc dru#06 = 
- They seem to go on forever.
+ The stairs seem to go on forever.
 #
 #-----------------------------------------------------------------------
 #
@@ -463,17 +480,25 @@ pull door
 elevator doors
 #
 @desc dru#07 =
- Gross.
+ The carpet of the elevator looks like it may once have been orange in 
+color. Now it's so dirty the color doesn't have a name.  There is a 
+speach interface panel in the wall next to the sliding doors.
 #
 #-----------------------------------------------------------------------
 #
-# Outro - leaving Druidia.
+# Travel to Outro and describe it.
 #
 # This cleans all temporary attributes set on the Character,
 # removes weapons and items etc. This room is only accessible
 # by using the "give up" command.
 #
 #-----------------------------------------------------------------------
+#
+elevator doors
+#
+push door
+#
+Leaving Druidia
 #
 @desc Leaving Druidia =
 
