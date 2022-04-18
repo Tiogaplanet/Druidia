@@ -139,9 +139,6 @@ word:
 
 
 Ahead lies your adventure. It beats staying here.
-
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -204,7 +201,7 @@ cabinet closet.
  An uncomfortable steel chair recessed into a track in the floor - probably
 to prevent theft.
 #
-@detail wall; walls =
+@detail wall;walls =
  The walls appear to be made of sheet steel. They are cold to the 
 touch. Next to the apartment door is a keycard reader.
 #
@@ -258,14 +255,10 @@ wall with theft-proof screws.
  The evacuation route is affixed to the wall for legal reasons.
 #
 @set evacuation route/readable_text =
-
-
- |rEVACUATION ROUTE|n
+ |r--EVACUATION ROUTE--|n
 
 In case of fire, do not use elevator. Proceed to ground level using the
 stairs at the north end of the hallway.
-
-
 #
 # Describe the apartment door.
 #
@@ -320,13 +313,13 @@ bowl.
 @detail medicine cabinet;medicine;cabinet = 
  Behind the mirror is a medicine cabinet with three shelves.
 #
-@detail walls =
+@detail wall;walls =
  The walls of the water closet are steel. The frequent high humidty in this
 room has created a light film of rust on the walls.
 #
 @detail ceiling = 
- Flourescent lighting buzzes above you in recessed panels in the ceiling. Near
-the shower stall is an extractor fan.
+ Flourescent lighting buzzes above you in recessed panels in the 
+ceiling. Near the shower stall is an extractor fan.
 #
 @detail floor = 
  Cold, bare steel. The floor is slightly lower than the floor in the rest 
@@ -453,6 +446,77 @@ stuck door
 #
 @desc dru#05 = 
  It looks just like yours except there is no water closet. That's odd.
+#
+@desc stuck door =
+ The door is stuck in the open position, allowing anyone to see into the
+neighbor's home.
+#
+#
+@detail steel desk;desk =
+ An old, heavy desk. It appears to be secured to the floor.
+#
+@detail steel chair;chair =
+ An uncomfortable steel chair recessed into a track in the floor - probably
+to prevent theft.
+#
+@detail wall;walls =
+ The walls appear to be made of sheet steel. They are cold to the 
+touch. Next to the apartment door is a keycard reader.
+#
+@detail floor = 
+ Simple gray carpet. It looks clean and easy to replace.
+#
+@detail ceiling = 
+ Flourescent lighting buzzes above you in recessed panels in the 
+ceiling. A speach interface panel is embedded in the ceiling among the
+lights.
+#
+@detail kitchen unit;kitchen = 
+ A sink, two small burners, a microwave and a small refridgerator. They 
+appear clean and seldom used.
+#
+@create/drop workstation;computer
+#
+@desc workstation = 
+ An old, beige computer. Two buttons and an LED display adorn the front 
+panel. The buttons are labelled |bPOWER|n and |bTURBO|n. The LED 
+display reads |g66|n. An asset tag is affixed to the side of the 
+workstation that reads
+ 
+PEACHTREES
+  ASSET #
+0000000002
+#
+# It's important to lock the workstation object or players will be able 
+# to pick it up and put it in their pocket.
+#
+@lock workstation = get:false()
+#
+# By setting the lock_msg attribute there will be a nice error message 
+# if people try to pick up the workstation.
+#
+@set workstation/get_err_msg =
+ The workstation is secured to the desk. It appears to be property of
+Peachtrees. I wouldn't take it if I were you.
+#
+# To meet building code, show an evacuation route.
+#
+@create/drop evacuation route;evac;evacuation;route : objects.Readable
+#
+@desc evacuation route =
+ The evacuation route is engraved on sheet steel and secured to the 
+wall with theft-proof screws. 
+#
+@lock evacuation route = get:false()
+#
+@set evacuation route/get_err_msg = 
+ The evacuation route is affixed to the wall for legal reasons.
+#
+@set evacuation route/readable_text =
+ |r--EVACUATION ROUTE--|n
+
+In case of fire, do not use elevator. Proceed to ground level using the
+stairs at the north end of the hallway.
 #
 #-----------------------------------------------------------------------
 #
@@ -1631,3 +1695,6 @@ Leaving Druidia
 #@open exit back to Limbo;limbo;exit;back = #2
 ##
 @tel #2
+#
+quell
+#
