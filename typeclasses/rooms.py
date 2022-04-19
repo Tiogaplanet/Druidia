@@ -15,6 +15,7 @@ from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
 from evennia import syscmdkeys, default_cmds
 from .objects import LightSource
+from typeclasses.objects import Object
 
 # the system error-handling module is defined in the settings. We load the
 # given setting here using utils.object_from_module. This way we can use
@@ -194,7 +195,7 @@ class RoomCmdSet(CmdSet):
         self.add(CmdGiveUp())
 
 
-class Room(DefaultRoom):
+class Room(DefaultRoom, Object):
     """
     Rooms are like any Object, except their location is None
     (which is default). They also use basetype_setup() to
