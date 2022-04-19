@@ -8,7 +8,7 @@ creation commands.
 
 """
 from evennia import DefaultCharacter
-
+from typeclasses.objects import Object
 
 class Character(DefaultCharacter, Object):
     """
