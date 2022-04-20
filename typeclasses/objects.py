@@ -1,9 +1,12 @@
 """
-World - basic objects - Griatch 2011
+
+Room typeclasses for Druidia.
 
 This module holds all "dead" object definitions for
-Druidia. Object-commands and -cmdsets
-are also defined here, together with the object.
+Druidia. Object commands, Object cmdsets and relevant
+parts of the role-playing system are also defined here.
+See the header comment for characters.py for the full
+#description of the role-playing system.
 
 Objects:
 
@@ -16,87 +19,6 @@ LightSource
 CrumblingWall
 Weapon
 WeaponRack
-
-
-Roleplaying base system for Evennia
-Contribution - Griatch, 2015
-This module contains the ContribRPObject, ContribRPRoom and
-ContribRPCharacter typeclasses.  If you inherit your
-objects/rooms/character from these (or make them the defaults) from
-these you will get the following features:
-    - Objects/Rooms will get the ability to have poses and will report
-    the poses of items inside them (the latter most useful for Rooms).
-    - Characters will get poses and also sdescs (short descriptions)
-    that will be used instead of their keys. They will gain commands
-    for managing recognition (custom sdesc-replacement), masking
-    themselves as well as an advanced free-form emote command.
-To use, simply import the typclasses you want from this module and use
-them to create your objects, or set them to default.
-In more detail, This RP base system introduces the following features
-to a game, common to many RP-centric games:
-    - emote system using director stance emoting (names/sdescs).
-        This uses a customizable replacement noun (/me, @ etc) to
-        represent you in the emote. You can use /sdesc, /nick, /key or
-        /alias to reference objects in the room. You can use any
-        number of sdesc sub-parts to differentiate a local sdesc, or
-        use /1-sdesc etc to differentiate them. The emote also
-        identifies nested says.
-    - sdesc obscuration of real character names for use in emotes
-        and in any referencing such as object.search().  This relies
-        on an SdescHandler `sdesc` being set on the Character and
-        makes use of a custom Character.get_display_name hook. If
-        sdesc is not set, the character's `key` is used instead. This
-        is particularly used in the emoting system.
-    - recog system to assign your own nicknames to characters, can then
-        be used for referencing. The user may recog a user and assign
-        any personal nick to them. This will be shown in descriptions
-        and used to reference them. This is making use of the nick
-        functionality of Evennia.
-    - masks to hide your identity (using a simple lock).
-    - pose system to set room-persistent poses, visible in room
-        descriptions and when looking at the person/object.  This is a
-        simple Attribute that modifies how the characters is viewed when
-        in a room as sdesc + pose.
-    - in-emote says, including seamless integration with language
-        obscuration routine (such as contrib/rplanguage.py)
-Examples:
-> look
-Tavern
-The tavern is full of nice people
-*A tall man* is standing by the bar.
-Above is an example of a player with an sdesc "a tall man". It is also
-an example of a static *pose*: The "standing by the bar" has been set
-by the player of the tall man, so that people looking at him can tell
-at a glance what is going on.
-> emote /me looks at /tall and says "Hello!"
-I see:
-    Griatch looks at Tall man and says "Hello".
-Tall man (assuming his name is Tom) sees:
-    The godlike figure looks at Tom and says "Hello".
-Verbose Installation Instructions:
-    1. In typeclasses/character.py:
-       Import the `ContribRPCharacter` class:
-           `from evennia.contrib.rpsystem import ContribRPCharacter`
-       Inherit ContribRPCharacter:
-           Change "class Character(DefaultCharacter):" to
-           `class Character(ContribRPCharacter):`
-       If you have any overriden calls in `at_object_creation(self)`:
-           Add `super().at_object_creation()` as the top line.
-    2. In `typeclasses/rooms.py`:
-           Import the `ContribRPRoom` class:
-           `from evennia.contrib.rpsystem import ContribRPRoom`
-       Inherit `ContribRPRoom`:
-           Change `class Room(DefaultRoom):` to
-           `class Room(ContribRPRoom):`
-    3. In `typeclasses/objects.py`
-           Import the `ContribRPObject` class:
-           `from evennia.contrib.rpsystem import ContribRPObject`
-       Inherit `ContribRPObject`:
-           Change `class Object(DefaultObject):` to
-           `class Object(ContribRPObject):`
-    4. Reload the server (@reload or from console: "evennia reload")
-    5. Force typeclass updates as required. Example for your character:
-           @type/reset/force me = typeclasses.characters.Character
 
 """
 
