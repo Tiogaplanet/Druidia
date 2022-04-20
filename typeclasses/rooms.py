@@ -1,6 +1,6 @@
 """
 
-Room Typeclasses for the World.
+Room typeclasses for Druidia.
 
 This defines special types of Rooms available in Druidia. To keep
 everything in one place we define them together with the custom
