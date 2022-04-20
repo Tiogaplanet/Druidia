@@ -6,17 +6,72 @@ They are what you "see" in game. The Character class in this module
 is setup to be the "default" character type created by the default
 creation commands.
 
+This module also provides the role-playing commands available to the 
+character.
+    - Objects can have poses and will report the poses of items 
+    inside them (the latter most useful for Rooms).
+    - Characters get poses and also sdescs (short descriptions)
+    that is used instead of their keys. They will gain commands
+    for managing recognition (custom sdesc-replacement), masking
+    themselves as well as an advanced free-form emote command.
+    
+This role-playing system introduces the following features
+to a game, common to many RP-centric games:
+    - emote system using director stance emoting (names/sdescs).
+        This uses a customizable replacement noun (/me, @ etc) to
+        represent you in the emote. You can use /sdesc, /nick, /key or
+        /alias to reference objects in the room. You can use any
+        number of sdesc sub-parts to differentiate a local sdesc, or
+        use /1-sdesc etc to differentiate them. The emote also
+        identifies nested says.
+    - sdesc obscuration of real character names for use in emotes
+        and in any referencing such as object.search().  This relies
+        on an SdescHandler `sdesc` being set on the Character and
+        makes use of a custom Character.get_display_name hook. If
+        sdesc is not set, the character's `key` is used instead. This
+        is particularly used in the emoting system.
+    - recog system to assign your own nicknames to characters, can then
+        be used for referencing. The user may recog a user and assign
+        any personal nick to them. This will be shown in descriptions
+        and used to reference them. This is making use of the nick
+        functionality of Evennia.
+    - masks to hide your identity (using a simple lock).
+    - pose system to set room-persistent poses, visible in room
+        descriptions and when looking at the person/object.  This is a
+        simple Attribute that modifies how the characters is viewed when
+        in a room as sdesc + pose.
+    - in-emote says, including seamless integration with language
+        obscuration routine (such as contrib/rplanguage.py)
+        
+Examples:
+> look
+Tavern
+The tavern is full of nice people
+*A tall man* is standing by the bar.
+Above is an example of a player with an sdesc "a tall man". It is also
+an example of a static *pose*: The "standing by the bar" has been set
+by the player of the tall man, so that people looking at him can tell
+at a glance what is going on.
+> emote /me looks at /tall and says "Hello!"
+I see:
+    Griatch looks at Tall man and says "Hello".
+Tall man (assuming his name is Tom) sees:
+    The godlike figure looks at Tom and says "Hello".
+
 """
 
 import re
 from re import escape as re_escape
 import itertools
+
 from evennia import DefaultCharacter
 from evennia import Command, CmdSet
 from evennia import ansi
-from typeclasses.objects import Object
 from evennia.utils.utils import lazy_property, make_iter, variable_from_module
+
 from django.conf import settings
+
+from typeclasses.objects import Object
 
 _AT_SEARCH_RESULT = variable_from_module(
     *settings.SEARCH_AT_RESULT.rsplit(".", 1))
