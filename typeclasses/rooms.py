@@ -9,13 +9,16 @@ in a separate module (e.g. if they could have been re-used elsewhere.)
 
 """
 
+
 import random
+
 from evennia import TICKER_HANDLER
 from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
 from evennia import syscmdkeys, default_cmds
-from .objects import LightSource
-from typeclasses.objects import Object
+
+from typeclasses.objects import Object, LightSource
+
 
 # the system error-handling module is defined in the settings. We load the
 # given setting here using utils.object_from_module. This way we can use
@@ -26,7 +29,7 @@ _SEARCH_AT_RESULT = utils.object_from_module(settings.SEARCH_AT_RESULT)
 
 # -------------------------------------------------------------
 #
-# Room - parent room class
+# Room - parent room class.
 #
 # This room is the parent of all rooms in Druidia.
 #
@@ -264,7 +267,7 @@ class Room(DefaultRoom, Object):
 
 # -------------------------------------------------------------
 #
-# Weather room - room with a ticker
+# Weather room - room with a ticker.
 #
 # -------------------------------------------------------------
 
@@ -409,7 +412,7 @@ class IntroRoom(Room):
 
 # -------------------------------------------------------------
 #
-# Bridge - unique room
+# Bridge - unique room.
 #
 # Defines a special west-eastward "bridge"-room, a large room that takes
 # several steps to cross. It is complete with custom commands and a
@@ -471,7 +474,7 @@ class CmdEast(Command):
         caller.execute_cmd("look")
 
 
-# go back across the bridge
+# Go back across the bridge.
 class CmdWest(Command):
     """
     Go westwards across the bridge.
@@ -530,6 +533,7 @@ BRIDGE_POS_MESSAGES = (
     "You are standing |wvery close to the bridge's eastern foundation|n."
     " If you go east you will be back on solid ground ...",
 )
+
 BRIDGE_MOODS = (
     "The bridge sways in the wind.",
     "The hanging bridge creaks dangerously.",
@@ -605,7 +609,7 @@ class CmdLookBridge(Command):
                                       self.caller.key)
 
 
-# custom help command
+# Custom help command.
 class CmdBridgeHelp(Command):
     """
     Overwritten help command while on the bridge.
@@ -742,11 +746,11 @@ class BridgeRoom(WeatherRoom):
 
 # -------------------------------------------------------------------------------
 #
-# Dark Room - a room with states
+# Dark Room - a room with states.
 #
 # This room limits the movemenets of its denizens unless they carry an active
 # LightSource object (LightSource is defined in
-#                                       world.objects.LightSource)
+#                                       typeclasses.objects.LightSource)
 #
 # -------------------------------------------------------------------------------
 
