@@ -6,7 +6,7 @@ This module holds all "dead" object definitions for
 Druidia. Object commands, Object cmdsets and relevant
 parts of the role-playing system are also defined here.
 See the header comment for characters.py for the full
-#description of the role-playing system.
+description of the role-playing system.
 
 Objects:
 
@@ -138,21 +138,23 @@ class Object(DefaultObject):
 
         if is_string:
             # searchdata is a string; wrap some common self-references
-            if searchdata.lower() in ("here", ):
+            if searchdata.lower() in ("here",):
                 return [self.location] if quiet else self.location
             if searchdata.lower() in ("me", "self"):
                 return [self] if quiet else self
 
         if use_nicks:
             # do nick-replacement on search
-            searchdata = self.nicks.nickreplace(searchdata,
-                                                categories=("object",
-                                                            "account"),
-                                                include_account=True)
+            searchdata = self.nicks.nickreplace(
+                searchdata, categories=("object", "account"), include_account=True
+            )
 
-        if global_search or (is_string and searchdata.startswith("#")
-                             and len(searchdata) > 1
-                             and searchdata[1:].isdigit()):
+        if global_search or (
+            is_string
+            and searchdata.startswith("#")
+            and len(searchdata) > 1
+            and searchdata[1:].isdigit()
+        ):
             # only allow exact matching if searching the entire database
             # or unique #dbrefs
             exact = True
@@ -192,10 +194,9 @@ class Object(DefaultObject):
             )
 
         if candidates:
-            candidates = parse_sdescs_and_recogs(self,
-                                                 candidates,
-                                                 _PREFIX + searchdata,
-                                                 search_mode=True)
+            candidates = parse_sdescs_and_recogs(
+                self, candidates, _PREFIX + searchdata, search_mode=True
+            )
             results = []
             for candidate in candidates:
                 # we search by candidate keys here; this allows full error
@@ -203,10 +204,9 @@ class Object(DefaultObject):
                 # in eventual error reporting later (not their keys). Doing
                 # it like this e.g. allows for use of the typeclass kwarg
                 # limiter.
-                results.extend([
-                    obj for obj in search_obj(candidate.key)
-                    if obj not in results
-                ])
+                results.extend(
+                    [obj for obj in search_obj(candidate.key) if obj not in results]
+                )
 
             if not results and is_builder:
                 # builders get a chance to search only by key+alias
@@ -243,8 +243,7 @@ class Object(DefaultObject):
         Notes:
             The RPObject version doesn't add color to its display.
         """
-        idstr = "(#%s)" % self.id if self.access(looker,
-                                                 access_type="control") else ""
+        idstr = "(#%s)" % self.id if self.access(looker, access_type="control") else ""
         if looker == self:
             sdesc = self.key
         else:
@@ -252,10 +251,8 @@ class Object(DefaultObject):
                 recog = looker.recog.get(self)
             except AttributeError:
                 recog = None
-            sdesc = recog or (hasattr(self, "sdesc")
-                              and self.sdesc.get()) or self.key
-        pose = " %s" % (self.db.pose or "") if kwargs.get("pose",
-                                                          False) else ""
+            sdesc = recog or (hasattr(self, "sdesc") and self.sdesc.get()) or self.key
+        pose = " %s" % (self.db.pose or "") if kwargs.get("pose", False) else ""
         return "%s%s%s" % (sdesc, idstr, pose)
 
     def return_appearance(self, looker):
@@ -268,8 +265,9 @@ class Object(DefaultObject):
         if not looker:
             return ""
         # get and identify all objects
-        visible = (con for con in self.contents
-                   if con != looker and con.access(looker, "view"))
+        visible = (
+            con for con in self.contents if con != looker and con.access(looker, "view")
+        )
         exits, users, things = [], [], []
         for con in visible:
             key = con.get_display_name(looker, pose=True)
@@ -408,7 +406,10 @@ class CmdClimb(Command):
             return
         ostring = self.obj.db.climb_text
         if not ostring:
-            ostring = "You climb %s. Having looked around, you climb down again." % self.obj.name
+            ostring = (
+                "You climb %s. Having looked around, you climb down again."
+                % self.obj.name
+            )
         self.caller.msg(ostring)
         # set a tag on the caller to remember that we climbed.
         self.caller.tags.add("tutorial_climbed_tree", category="world")
@@ -526,9 +527,9 @@ class CmdLight(Command):
 
         if self.obj.light():
             self.caller.msg("You light %s." % self.obj.key)
-            self.caller.location.msg_contents("%s lights %s!" %
-                                              (self.caller, self.obj.key),
-                                              exclude=[self.caller])
+            self.caller.location.msg_contents(
+                "%s lights %s!" % (self.caller, self.obj.key), exclude=[self.caller]
+            )
         else:
             self.caller.msg("%s is already burning." % self.obj.key)
 
@@ -570,7 +571,9 @@ class LightSource(Object):
         self.db.burntime = 60 * 3  # 3 minutes
         # this is the default desc, it can of course be customized
         # when created.
-        self.db.desc = "A splinter of wood with remnants of resin on it, enough for burning."
+        self.db.desc = (
+            "A splinter of wood with remnants of resin on it, enough for burning."
+        )
         # add the Light command
         self.cmdset.add_default(CmdSetLight, permanent=True)
 
@@ -582,15 +585,17 @@ class LightSource(Object):
         # delete ourselves from the database
         self.db.is_giving_light = False
         try:
-            self.location.location.msg_contents("%s's %s flickers and dies." %
-                                                (self.location, self.key),
-                                                exclude=self.location)
+            self.location.location.msg_contents(
+                "%s's %s flickers and dies." % (self.location, self.key),
+                exclude=self.location,
+            )
             self.location.msg("Your %s flickers and dies." % self.key)
             self.location.location.check_light_state()
         except AttributeError:
             try:
                 self.location.msg_contents(
-                    "A %s on the floor flickers and dies." % self.key)
+                    "A %s on the floor flickers and dies." % self.key
+                )
                 self.location.location.check_light_state()
             except AttributeError:
                 # Mainly happens if we happen to be in a None location
@@ -737,7 +742,8 @@ class CmdShiftRoot(Command):
             if direction == "left":
                 root_pos[color] = max(-1, root_pos[color] - 1)
                 self.caller.msg(
-                    "You shift the root with small blue flowers to the left.")
+                    "You shift the root with small blue flowers to the left."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["red"]:
                     root_pos["red"] += 1
                     self.caller.msg(
@@ -762,10 +768,8 @@ class CmdShiftRoot(Command):
         elif color == "yellow":
             if direction == "up":
                 root_pos[color] = max(-1, root_pos[color] - 1)
-                self.caller.msg(
-                    "You shift the root with small yellow flowers upwards.")
-                if root_pos[color] != 0 and root_pos[color] == root_pos[
-                        "green"]:
+                self.caller.msg("You shift the root with small yellow flowers upwards.")
+                if root_pos[color] != 0 and root_pos[color] == root_pos["green"]:
                     root_pos["green"] += 1
                     self.caller.msg("The green weedy root falls down.")
             elif direction == "down":
@@ -773,8 +777,7 @@ class CmdShiftRoot(Command):
                 self.caller.msg(
                     "You shove the root adorned with small yellow flowers downwards."
                 )
-                if root_pos[color] != 0 and root_pos[color] == root_pos[
-                        "green"]:
+                if root_pos[color] != 0 and root_pos[color] == root_pos["green"]:
                     root_pos["green"] -= 1
                     self.caller.msg(
                         "The weedy green root is shifted upwards to make room."
@@ -787,15 +790,13 @@ class CmdShiftRoot(Command):
             if direction == "up":
                 root_pos[color] = max(-1, root_pos[color] - 1)
                 self.caller.msg("You shift the weedy green root upwards.")
-                if root_pos[color] != 0 and root_pos[color] == root_pos[
-                        "yellow"]:
+                if root_pos[color] != 0 and root_pos[color] == root_pos["yellow"]:
                     root_pos["yellow"] += 1
                     self.caller.msg("The root with yellow flowers falls down.")
             elif direction == "down":
                 root_pos[color] = min(1, root_pos[color] + 1)
                 self.caller.msg("You shove the weedy green root downwards.")
-                if root_pos[color] != 0 and root_pos[color] == root_pos[
-                        "yellow"]:
+                if root_pos[color] != 0 and root_pos[color] == root_pos["yellow"]:
                     root_pos["yellow"] -= 1
                     self.caller.msg(
                         "The root with yellow flowers gets in the way and is pushed upwards."
@@ -809,8 +810,7 @@ class CmdShiftRoot(Command):
         self.obj.db.root_pos = root_pos
 
         # Check victory condition
-        if list(root_pos.values()).count(
-                0) == 0:  # no roots in middle position
+        if list(root_pos.values()).count(0) == 0:  # no roots in middle position
             # This will affect the cmd: lock of CmdPressButton
             self.obj.db.button_exposed = True
             self.caller.msg(
@@ -854,8 +854,7 @@ class CmdPressButton(Command):
             "decisive push. First nothing happens, then there is a rumble and a hidden "
             "|wpassage|n opens, dust and pebbles rumbling as part of the wall moves aside."
         )
-        self.caller.location.msg_contents(string % self.caller.key,
-                                          exclude=self.caller)
+        self.caller.location.msg_contents(string % self.caller.key, exclude=self.caller)
         if not self.obj.open_wall():
             self.caller.msg(
                 "The exit leads nowhere, there's just more stone behind it ..."
@@ -899,8 +898,7 @@ class CrumblingWall(Object, DefaultExit):
         """called when the object is first created."""
         super().at_object_creation()
 
-        self.aliases.add(
-            ["secret passage", "passage", "crack", "opening", "secret"])
+        self.aliases.add(["secret passage", "passage", "crack", "opening", "secret"])
 
         # starting root positions. H1/H2 are the horizontally hanging roots,
         # V1/V2 the vertically hanging ones. Each can have three positions:
@@ -948,8 +946,7 @@ class CrumblingWall(Object, DefaultExit):
         rootnames = {
             "red": "The |rreddish|n vertical-hanging root ",
             "blue": "The thick vertical root with |bblue|n flowers ",
-            "yellow":
-            "The thin horizontal-hanging root with |yyellow|n flowers ",
+            "yellow": "The thin horizontal-hanging root with |yyellow|n flowers ",
             "green": "The weedy |ggreen|n horizontal root ",
         }
         vpos = {
@@ -1017,8 +1014,8 @@ class CrumblingWall(Object, DefaultExit):
     def at_failed_traverse(self, traverser):
         """This is called if the account fails to pass the Exit."""
         traverser.msg(
-            "No matter how you try, you cannot force yourself through %s." %
-            self.key)
+            "No matter how you try, you cannot force yourself through %s." % self.key
+        )
 
     def reset(self):
         """
@@ -1026,7 +1023,8 @@ class CrumblingWall(Object, DefaultExit):
         traversed the Exit.
         """
         self.location.msg_contents(
-            "The secret door closes abruptly, roots falling back into place.")
+            "The secret door closes abruptly, roots falling back into place."
+        )
 
         # reset the flags and remove the exit destination
         self.db.button_exposed = False
@@ -1035,36 +1033,11 @@ class CrumblingWall(Object, DefaultExit):
 
         # Reset the roots with some random starting positions for the roots:
         start_pos = [
-            {
-                "yellow": 1,
-                "green": 0,
-                "red": 0,
-                "blue": 0
-            },
-            {
-                "yellow": 0,
-                "green": 0,
-                "red": 0,
-                "blue": 0
-            },
-            {
-                "yellow": 0,
-                "green": 1,
-                "red": -1,
-                "blue": 0
-            },
-            {
-                "yellow": 1,
-                "green": 0,
-                "red": 0,
-                "blue": 0
-            },
-            {
-                "yellow": 0,
-                "green": 0,
-                "red": 0,
-                "blue": 1
-            },
+            {"yellow": 1, "green": 0, "red": 0, "blue": 0},
+            {"yellow": 0, "green": 0, "red": 0, "blue": 0},
+            {"yellow": 0, "green": 1, "red": -1, "blue": 0},
+            {"yellow": 1, "green": 0, "red": 0, "blue": 0},
+            {"yellow": 0, "green": 0, "red": 0, "blue": 1},
         ]
         self.db.root_pos = random.choice(start_pos)
 
@@ -1126,20 +1099,20 @@ class CmdAttack(Command):
         cmdstring = self.cmdstring
 
         if cmdstring in ("attack", "fight"):
-            string = "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            string = (
+                "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            )
             self.caller.msg(string)
             return
 
         # parry mode
         if cmdstring in ("parry", "defend"):
-            string = (
-                "You raise your weapon in a defensive pose, ready to block the next enemy attack."
-            )
+            string = "You raise your weapon in a defensive pose, ready to block the next enemy attack."
             self.caller.msg(string)
             self.caller.db.combat_parry_mode = True
-            self.caller.location.msg_contents("%s takes a defensive stance" %
-                                              self.caller,
-                                              exclude=[self.caller])
+            self.caller.location.msg_contents(
+                "%s takes a defensive stance" % self.caller, exclude=[self.caller]
+            )
             return
 
         if not self.args:
@@ -1153,27 +1126,31 @@ class CmdAttack(Command):
             hit = float(self.obj.db.hit) * 0.7  # modified due to stab
             damage = self.obj.db.damage * 2  # modified due to stab
             string = "You stab with %s. " % self.obj.key
-            tstring = "%s stabs at you with %s. " % (self.caller.key,
-                                                     self.obj.key)
-            ostring = "%s stabs at %s with %s. " % (self.caller.key,
-                                                    target.key, self.obj.key)
+            tstring = "%s stabs at you with %s. " % (self.caller.key, self.obj.key)
+            ostring = "%s stabs at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         elif cmdstring in ("slash", "chop", "bash"):
             hit = float(self.obj.db.hit)  # un modified due to slash
             damage = self.obj.db.damage  # un modified due to slash
             string = "You slash with %s. " % self.obj.key
-            tstring = "%s slash at you with %s. " % (self.caller.key,
-                                                     self.obj.key)
-            ostring = "%s slash at %s with %s. " % (self.caller.key,
-                                                    target.key, self.obj.key)
+            tstring = "%s slash at you with %s. " % (self.caller.key, self.obj.key)
+            ostring = "%s slash at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         else:
             self.caller.msg(
                 "You fumble with your weapon, unsure of whether to stab, slash or parry ..."
             )
-            self.caller.location.msg_contents("%s fumbles with their weapon." %
-                                              self.caller,
-                                              exclude=self.caller)
+            self.caller.location.msg_contents(
+                "%s fumbles with their weapon." % self.caller, exclude=self.caller
+            )
             self.caller.db.combat_parry_mode = False
             return
 
@@ -1185,8 +1162,9 @@ class CmdAttack(Command):
         if random.random() <= hit:
             self.caller.msg(string + "|gIt's a hit!|n")
             target.msg(tstring + "|rIt's a hit!|n")
-            self.caller.location.msg_contents(ostring + "It's a hit!",
-                                              exclude=[target, self.caller])
+            self.caller.location.msg_contents(
+                ostring + "It's a hit!", exclude=[target, self.caller]
+            )
 
             # call enemy hook
             if hasattr(target, "at_hit"):
@@ -1202,8 +1180,9 @@ class CmdAttack(Command):
         else:
             self.caller.msg(string + "|rYou miss.|n")
             target.msg(tstring + "|gThey miss you.|n")
-            self.caller.location.msg_contents(ostring + "They miss.",
-                                              exclude=[target, self.caller])
+            self.caller.location.msg_contents(
+                ostring + "They miss.", exclude=[target, self.caller]
+            )
 
 
 class CmdSetWeapon(CmdSet):
@@ -1243,7 +1222,8 @@ class Weapon(Object):
         if self.location.has_account and self.home == self.location:
             self.location.msg_contents(
                 "%s suddenly and magically fades into nothingness, as if it was never there ..."
-                % self.key)
+                % self.key
+            )
             self.delete()
         else:
             self.location = self.home
@@ -1283,16 +1263,14 @@ WEAPON_PROTOTYPES = {
         "prototype_parent": "knife",
         "key": "Rusty dagger",
         "aliases": ["knife", "dagger"],
-        "desc":
-        "A double-edged dagger with a nicked edge and a wooden handle.",
+        "desc": "A double-edged dagger with a nicked edge and a wooden handle.",
         "hit": 0.25,
     },
     "sword": {
         "prototype_parent": "weapon",
         "key": "Rusty sword",
         "aliases": ["sword"],
-        "desc":
-        "A rusty shortsword. It has a leather-wrapped handle covered i food grease.",
+        "desc": "A rusty shortsword. It has a leather-wrapped handle covered i food grease.",
         "hit": 0.3,
         "damage": 5,
         "parry": 0.5,
@@ -1325,8 +1303,7 @@ WEAPON_PROTOTYPES = {
         "prototype_parent": "club",
         "key": "Silver Warhammer",
         "aliases": ["hammer", "warhammer", "war"],
-        "desc":
-        "A heavy war hammer with silver ornaments. This huge weapon causes massive damage - if you can hit.",
+        "desc": "A heavy war hammer with silver ornaments. This huge weapon causes massive damage - if you can hit.",
         "hit": 0.4,
         "magic": True,
         "damage": 8,
@@ -1342,8 +1319,7 @@ WEAPON_PROTOTYPES = {
     "thruning": {
         "prototype_parent": "ornate longsword",
         "key": "Broadsword named Thruning",
-        "desc":
-        "This heavy bladed weapon is marked with the name 'Thruning'. It is very powerful in skilled hands.",
+        "desc": "This heavy bladed weapon is marked with the name 'Thruning'. It is very powerful in skilled hands.",
         "hit": 0.6,
         "parry": 0.6,
         "damage": 7,
@@ -1358,20 +1334,14 @@ WEAPON_PROTOTYPES = {
         "damage": 8,
     },
     "ghostblade": {
-        "prototype_parent":
-        "ornate longsword",
-        "key":
-        "The Ghostblade",
+        "prototype_parent": "ornate longsword",
+        "key": "The Ghostblade",
         "aliases": ["blade", "ghost"],
-        "desc":
-        "This massive sword is large as you are tall, yet seems to weigh almost nothing."
+        "desc": "This massive sword is large as you are tall, yet seems to weigh almost nothing."
         " It's almost like it's not really there.",
-        "hit":
-        0.9,
-        "parry":
-        0.8,
-        "damage":
-        10,
+        "hit": 0.9,
+        "parry": 0.8,
+        "damage": 10,
     },
     "hawkblade": {
         "prototype_parent": "ghostblade",
@@ -1444,12 +1414,14 @@ class WeaponRack(Object):
         self.db.rack_id = "weaponrack_1"
         # these are prototype names from the prototype
         # dictionary above.
-        self.db.get_weapon_msg = dedent("""
+        self.db.get_weapon_msg = dedent(
+            """
             You find |c%s|n. While carrying this weapon, these actions are available:
               |wstab/thrust/pierce <target>|n - poke at the enemy. More damage but harder to hit.
               |wslash/chop/bash <target>|n - swipe at the enemy. Less damage but easier to hit.
               |wdefend/parry|n - protect yourself and make yourself harder to hit.)
-            """).strip()
+            """
+        ).strip()
 
         self.db.no_more_weapons_msg = "you find nothing else of use."
         self.db.available_weapons = ["knife", "dagger", "sword", "club"]
@@ -1469,8 +1441,9 @@ class WeaponRack(Object):
             prototype = random.choice(self.db.available_weapons)
             # use the spawner to create a new Weapon from the
             # spawner dictionary, tag the caller
-            wpn = spawn(WEAPON_PROTOTYPES[prototype],
-                        prototype_parents=WEAPON_PROTOTYPES)[0]
+            wpn = spawn(
+                WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES
+            )[0]
             caller.tags.add(rack_id, category="world")
             wpn.location = caller
             caller.msg(self.db.get_weapon_msg % wpn.key)
