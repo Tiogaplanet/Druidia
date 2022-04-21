@@ -210,17 +210,23 @@ def _maintain_demo_room(caller, delete=False):
             del caller.db.tutorial_world_demo_room_data
     elif not roomdata:
         # create and describe the cabin and box
-        room1 = create_object("evennia.objects.objects.DefaultRoom", key="A small, cozy cabin")
+        room1 = create_object(
+            "evennia.objects.objects.DefaultRoom", key="A small, cozy cabin"
+        )
         room1.db.desc = _ROOM_DESC.lstrip()
         sign = create_object(
-            "evennia.objects.objects.DefaultObject", key="small wooden sign", location=room1
+            "evennia.objects.objects.DefaultObject",
+            key="small wooden sign",
+            location=room1,
         )
         sign.db.desc = _SIGN_DESC.strip()
         sign.locks.add("get:false()")
         sign.db.get_err_msg = "The sign is nailed to the wall. It's not budging."
 
         # create and describe the meadow and stone
-        room2 = create_object("evennia.objects.objects.DefaultRoom", key="A lush summer meadow")
+        room2 = create_object(
+            "evennia.objects.objects.DefaultRoom", key="A lush summer meadow"
+        )
         room2.db.desc = _MEADOW_DESC.lstrip()
         stone = create_object(
             "evennia.objects.objects.DefaultObject", key="carved stone", location=room2
@@ -764,7 +770,9 @@ class TutorialEvMenu(EvMenu):
             else:
                 other.append((key, desc))
         navigation = (
-            (" " + " |W|||n ".join(navigation) + " |W|||n " + "|wQ|Wuit|n") if navigation else ""
+            (" " + " |W|||n ".join(navigation) + " |W|||n " + "|wQ|Wuit|n")
+            if navigation
+            else ""
         )
         other = super().options_formatter(other)
         sep = "\n\n" if navigation and other else ""

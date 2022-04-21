@@ -2,10 +2,12 @@
 
 from typeclasses.objects import Object
 
+
 class Spoon(Object):
     """
     This creates a simple spoon object
     """
+
     def at_object_creation(self):
         "this is called only once, when object is first created"
         # add a persistent attribute 'desc'

@@ -1,9 +1,12 @@
 """
-World - basic objects - Griatch 2011
+
+Room typeclasses for Druidia.
 
 This module holds all "dead" object definitions for
-Druidia. Object-commands and -cmdsets
-are also defined here, together with the object.
+Druidia. Object commands, Object cmdsets and relevant
+parts of the role-playing system are also defined here.
+See the header comment for characters.py for the full
+description of the role-playing system.
 
 Objects:
 
@@ -39,6 +42,8 @@ from evennia.prototypes.spawner import spawn
 #
 # -------------------------------------------------------------
 
+from evennia import DefaultObject
+
 
 class Object(DefaultObject):
     """
@@ -48,6 +53,240 @@ class Object(DefaultObject):
     def at_object_creation(self):
         """Called when the object is first created."""
         super().at_object_creation()
+
+        # emoting/recog data
+        self.db.pose = ""
+        self.db.pose_default = "is here."
+
+    def search(
+        self,
+        searchdata,
+        global_search=False,
+        use_nicks=True,
+        typeclass=None,
+        location=None,
+        attribute_name=None,
+        quiet=False,
+        exact=False,
+        candidates=None,
+        nofound_string=None,
+        multimatch_string=None,
+        use_dbref=None,
+    ):
+        """
+        Returns an Object matching a search string/condition, taking
+        sdescs into account.
+        Perform a standard object search in the database, handling
+        multiple results and lack thereof gracefully. By default, only
+        objects in the current `location` of `self` or its inventory are searched for.
+        Args:
+            searchdata (str or obj): Primary search criterion. Will be matched
+                against `object.key` (with `object.aliases` second) unless
+                the keyword attribute_name specifies otherwise.
+                **Special strings:**
+                - `#<num>`: search by unique dbref. This is always
+                   a global search.
+                - `me,self`: self-reference to this object
+                - `<num>-<string>` - can be used to differentiate
+                   between multiple same-named matches
+            global_search (bool): Search all objects globally. This is overruled
+                by `location` keyword.
+            use_nicks (bool): Use nickname-replace (nicktype "object") on `searchdata`.
+            typeclass (str or Typeclass, or list of either): Limit search only
+                to `Objects` with this typeclass. May be a list of typeclasses
+                for a broader search.
+            location (Object or list): Specify a location or multiple locations
+                to search. Note that this is used to query the *contents* of a
+                location and will not match for the location itself -
+                if you want that, don't set this or use `candidates` to specify
+                exactly which objects should be searched.
+            attribute_name (str): Define which property to search. If set, no
+                key+alias search will be performed. This can be used
+                to search database fields (db_ will be automatically
+                appended), and if that fails, it will try to return
+                objects having Attributes with this name and value
+                equal to searchdata. A special use is to search for
+                "key" here if you want to do a key-search without
+                including aliases.
+            quiet (bool): don't display default error messages - this tells the
+                search method that the user wants to handle all errors
+                themselves. It also changes the return value type, see
+                below.
+            exact (bool): if unset (default) - prefers to match to beginning of
+                string rather than not matching at all. If set, requires
+                exact matching of entire string.
+            candidates (list of objects): this is an optional custom list of objects
+                to search (filter) between. It is ignored if `global_search`
+                is given. If not set, this list will automatically be defined
+                to include the location, the contents of location and the
+                caller's contents (inventory).
+            nofound_string (str):  optional custom string for not-found error message.
+            multimatch_string (str): optional custom string for multimatch error header.
+            use_dbref (bool or None): If None, only turn off use_dbref if we are of a lower
+                permission than Builder. Otherwise, honor the True/False value.
+        Returns:
+            match (Object, None or list): will return an Object/None if `quiet=False`,
+                otherwise it will return a list of 0, 1 or more matches.
+        Notes:
+            To find Accounts, use eg. `evennia.account_search`. If
+            `quiet=False`, error messages will be handled by
+            `settings.SEARCH_AT_RESULT` and echoed automatically (on
+            error, return will be `None`). If `quiet=True`, the error
+            messaging is assumed to be handled by the caller.
+        """
+        is_string = isinstance(searchdata, str)
+
+        if is_string:
+            # searchdata is a string; wrap some common self-references
+            if searchdata.lower() in ("here",):
+                return [self.location] if quiet else self.location
+            if searchdata.lower() in ("me", "self"):
+                return [self] if quiet else self
+
+        if use_nicks:
+            # do nick-replacement on search
+            searchdata = self.nicks.nickreplace(
+                searchdata, categories=("object", "account"), include_account=True
+            )
+
+        if global_search or (
+            is_string
+            and searchdata.startswith("#")
+            and len(searchdata) > 1
+            and searchdata[1:].isdigit()
+        ):
+            # only allow exact matching if searching the entire database
+            # or unique #dbrefs
+            exact = True
+        elif candidates is None:
+            # no custom candidates given - get them automatically
+            if location:
+                # location(s) were given
+                candidates = []
+                for obj in make_iter(location):
+                    candidates.extend(obj.contents)
+            else:
+                # local search. Candidates are taken from
+                # self.contents, self.location and
+                # self.location.contents
+                location = self.location
+                candidates = self.contents
+                if location:
+                    candidates = candidates + [location] + location.contents
+                else:
+                    # normally we don't need this since we are
+                    # included in location.contents
+                    candidates.append(self)
+
+        # the sdesc-related substitution
+        is_builder = self.locks.check_lockstring(self, "perm(Builder)")
+        use_dbref = is_builder if use_dbref is None else use_dbref
+
+        def search_obj(string):
+            "helper wrapper for searching"
+            return ObjectDB.objects.object_search(
+                string,
+                attribute_name=attribute_name,
+                typeclass=typeclass,
+                candidates=candidates,
+                exact=exact,
+                use_dbref=use_dbref,
+            )
+
+        if candidates:
+            candidates = parse_sdescs_and_recogs(
+                self, candidates, _PREFIX + searchdata, search_mode=True
+            )
+            results = []
+            for candidate in candidates:
+                # we search by candidate keys here; this allows full error
+                # management and use of all kwargs - we will use searchdata
+                # in eventual error reporting later (not their keys). Doing
+                # it like this e.g. allows for use of the typeclass kwarg
+                # limiter.
+                results.extend(
+                    [obj for obj in search_obj(candidate.key) if obj not in results]
+                )
+
+            if not results and is_builder:
+                # builders get a chance to search only by key+alias
+                results = search_obj(searchdata)
+        else:
+            # global searches / #drefs end up here. Global searches are
+            # only done in code, so is controlled, #dbrefs are turned off
+            # for non-Builders.
+            results = search_obj(searchdata)
+
+        if quiet:
+            return results
+        return _AT_SEARCH_RESULT(
+            results,
+            self,
+            query=searchdata,
+            nofound_string=nofound_string,
+            multimatch_string=multimatch_string,
+        )
+
+    def get_display_name(self, looker, **kwargs):
+        """
+        Displays the name of the object in a viewer-aware manner.
+        Args:
+            looker (TypedObject): The object or account that is looking
+                at/getting inforamtion for this object.
+        Keyword Args:
+            pose (bool): Include the pose (if available) in the return.
+        Returns:
+            name (str): A string of the sdesc containing the name of the object,
+            if this is defined.
+                including the DBREF if this user is privileged to control
+                said object.
+        Notes:
+            The RPObject version doesn't add color to its display.
+        """
+        idstr = "(#%s)" % self.id if self.access(looker, access_type="control") else ""
+        if looker == self:
+            sdesc = self.key
+        else:
+            try:
+                recog = looker.recog.get(self)
+            except AttributeError:
+                recog = None
+            sdesc = recog or (hasattr(self, "sdesc") and self.sdesc.get()) or self.key
+        pose = " %s" % (self.db.pose or "") if kwargs.get("pose", False) else ""
+        return "%s%s%s" % (sdesc, idstr, pose)
+
+    def return_appearance(self, looker):
+        """
+        This formats a description. It is the hook a 'look' command
+        should call.
+        Args:
+            looker (Object): Object doing the looking.
+        """
+        if not looker:
+            return ""
+        # get and identify all objects
+        visible = (
+            con for con in self.contents if con != looker and con.access(looker, "view")
+        )
+        exits, users, things = [], [], []
+        for con in visible:
+            key = con.get_display_name(looker, pose=True)
+            if con.destination:
+                exits.append(key)
+            elif con.has_account:
+                users.append(key)
+            else:
+                things.append(key)
+        # get description, build string
+        string = "|c%s|n\n" % self.get_display_name(looker, pose=True)
+        desc = self.db.desc
+        if desc:
+            string += "%s" % desc
+        if exits:
+            string += "\n|wExits:|n " + ", ".join(exits)
+        if users or things:
+            string += "\n " + "\n ".join(users + things)
+        return string
 
     def reset(self):
         """Resets the object, whatever that may mean."""
@@ -167,7 +406,10 @@ class CmdClimb(Command):
             return
         ostring = self.obj.db.climb_text
         if not ostring:
-            ostring = "You climb %s. Having looked around, you climb down again." % self.obj.name
+            ostring = (
+                "You climb %s. Having looked around, you climb down again."
+                % self.obj.name
+            )
         self.caller.msg(ostring)
         # set a tag on the caller to remember that we climbed.
         self.caller.tags.add("tutorial_climbed_tree", category="world")
@@ -329,7 +571,9 @@ class LightSource(Object):
         self.db.burntime = 60 * 3  # 3 minutes
         # this is the default desc, it can of course be customized
         # when created.
-        self.db.desc = "A splinter of wood with remnants of resin on it, enough for burning."
+        self.db.desc = (
+            "A splinter of wood with remnants of resin on it, enough for burning."
+        )
         # add the Light command
         self.cmdset.add_default(CmdSetLight, permanent=True)
 
@@ -342,13 +586,16 @@ class LightSource(Object):
         self.db.is_giving_light = False
         try:
             self.location.location.msg_contents(
-                "%s's %s flickers and dies." % (self.location, self.key), exclude=self.location
+                "%s's %s flickers and dies." % (self.location, self.key),
+                exclude=self.location,
             )
             self.location.msg("Your %s flickers and dies." % self.key)
             self.location.location.check_light_state()
         except AttributeError:
             try:
-                self.location.msg_contents("A %s on the floor flickers and dies." % self.key)
+                self.location.msg_contents(
+                    "A %s on the floor flickers and dies." % self.key
+                )
                 self.location.location.check_light_state()
             except AttributeError:
                 # Mainly happens if we happen to be in a None location
@@ -494,7 +741,9 @@ class CmdShiftRoot(Command):
         elif color == "blue":
             if direction == "left":
                 root_pos[color] = max(-1, root_pos[color] - 1)
-                self.caller.msg("You shift the root with small blue flowers to the left.")
+                self.caller.msg(
+                    "You shift the root with small blue flowers to the left."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["red"]:
                     root_pos["red"] += 1
                     self.caller.msg(
@@ -502,7 +751,9 @@ class CmdShiftRoot(Command):
                     )
             elif direction == "right":
                 root_pos[color] = min(1, root_pos[color] + 1)
-                self.caller.msg("You shove the root adorned with small blue flowers to the right.")
+                self.caller.msg(
+                    "You shove the root adorned with small blue flowers to the right."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["red"]:
                     root_pos["red"] -= 1
                     self.caller.msg(
@@ -523,12 +774,18 @@ class CmdShiftRoot(Command):
                     self.caller.msg("The green weedy root falls down.")
             elif direction == "down":
                 root_pos[color] = min(1, root_pos[color] + 1)
-                self.caller.msg("You shove the root adorned with small yellow flowers downwards.")
+                self.caller.msg(
+                    "You shove the root adorned with small yellow flowers downwards."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["green"]:
                     root_pos["green"] -= 1
-                    self.caller.msg("The weedy green root is shifted upwards to make room.")
+                    self.caller.msg(
+                        "The weedy green root is shifted upwards to make room."
+                    )
             else:
-                self.caller.msg("The root hangs across the wall - you can only move it up or down.")
+                self.caller.msg(
+                    "The root hangs across the wall - you can only move it up or down."
+                )
         elif color == "green":
             if direction == "up":
                 root_pos[color] = max(-1, root_pos[color] - 1)
@@ -545,7 +802,9 @@ class CmdShiftRoot(Command):
                         "The root with yellow flowers gets in the way and is pushed upwards."
                     )
             else:
-                self.caller.msg("The root hangs across the wall - you can only move it up or down.")
+                self.caller.msg(
+                    "The root hangs across the wall - you can only move it up or down."
+                )
 
         # we have moved the root. Store new position
         self.obj.db.root_pos = root_pos
@@ -554,7 +813,9 @@ class CmdShiftRoot(Command):
         if list(root_pos.values()).count(0) == 0:  # no roots in middle position
             # This will affect the cmd: lock of CmdPressButton
             self.obj.db.button_exposed = True
-            self.caller.msg("Holding aside the root you think you notice something behind it ...")
+            self.caller.msg(
+                "Holding aside the root you think you notice something behind it ..."
+            )
 
 
 class CmdPressButton(Command):
@@ -595,7 +856,9 @@ class CmdPressButton(Command):
         )
         self.caller.location.msg_contents(string % self.caller.key, exclude=self.caller)
         if not self.obj.open_wall():
-            self.caller.msg("The exit leads nowhere, there's just more stone behind it ...")
+            self.caller.msg(
+                "The exit leads nowhere, there's just more stone behind it ..."
+            )
 
 
 class CmdSetCrumblingWall(CmdSet):
@@ -750,7 +1013,9 @@ class CrumblingWall(Object, DefaultExit):
 
     def at_failed_traverse(self, traverser):
         """This is called if the account fails to pass the Exit."""
-        traverser.msg("No matter how you try, you cannot force yourself through %s." % self.key)
+        traverser.msg(
+            "No matter how you try, you cannot force yourself through %s." % self.key
+        )
 
     def reset(self):
         """
@@ -781,13 +1046,13 @@ class CrumblingWall(Object, DefaultExit):
 #
 # Weapon - object type
 #
-# A weapon (which here is assumed to be a bladed melee weapon for close 
-# combat) has three commands, stab, slash and defend. Weapons also have 
-# a property "magic" to determine if they are usable against certain 
+# A weapon (which here is assumed to be a bladed melee weapon for close
+# combat) has three commands, stab, slash and defend. Weapons also have
+# a property "magic" to determine if they are usable against certain
 # enemies.
 #
-# Since Characters don't have special skills (yet), we let the weapon 
-# itself determine how easy/hard it is to hit with it, and how much 
+# Since Characters don't have special skills (yet), we let the weapon
+# itself determine how easy/hard it is to hit with it, and how much
 # damage it can do.
 #
 # -------------------------------------------------------------
@@ -834,15 +1099,15 @@ class CmdAttack(Command):
         cmdstring = self.cmdstring
 
         if cmdstring in ("attack", "fight"):
-            string = "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            string = (
+                "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            )
             self.caller.msg(string)
             return
 
         # parry mode
         if cmdstring in ("parry", "defend"):
-            string = (
-                "You raise your weapon in a defensive pose, ready to block the next enemy attack."
-            )
+            string = "You raise your weapon in a defensive pose, ready to block the next enemy attack."
             self.caller.msg(string)
             self.caller.db.combat_parry_mode = True
             self.caller.location.msg_contents(
@@ -862,14 +1127,22 @@ class CmdAttack(Command):
             damage = self.obj.db.damage * 2  # modified due to stab
             string = "You stab with %s. " % self.obj.key
             tstring = "%s stabs at you with %s. " % (self.caller.key, self.obj.key)
-            ostring = "%s stabs at %s with %s. " % (self.caller.key, target.key, self.obj.key)
+            ostring = "%s stabs at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         elif cmdstring in ("slash", "chop", "bash"):
             hit = float(self.obj.db.hit)  # un modified due to slash
             damage = self.obj.db.damage  # un modified due to slash
             string = "You slash with %s. " % self.obj.key
             tstring = "%s slash at you with %s. " % (self.caller.key, self.obj.key)
-            ostring = "%s slash at %s with %s. " % (self.caller.key, target.key, self.obj.key)
+            ostring = "%s slash at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         else:
             self.caller.msg(
@@ -907,7 +1180,9 @@ class CmdAttack(Command):
         else:
             self.caller.msg(string + "|rYou miss.|n")
             target.msg(tstring + "|gThey miss you.|n")
-            self.caller.location.msg_contents(ostring + "They miss.", exclude=[target, self.caller])
+            self.caller.location.msg_contents(
+                ostring + "They miss.", exclude=[target, self.caller]
+            )
 
 
 class CmdSetWeapon(CmdSet):
@@ -1166,7 +1441,9 @@ class WeaponRack(Object):
             prototype = random.choice(self.db.available_weapons)
             # use the spawner to create a new Weapon from the
             # spawner dictionary, tag the caller
-            wpn = spawn(WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES)[0]
+            wpn = spawn(
+                WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES
+            )[0]
             caller.tags.add(rack_id, category="world")
             wpn.location = caller
             caller.msg(self.db.get_weapon_msg % wpn.key)
