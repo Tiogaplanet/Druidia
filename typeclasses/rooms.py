@@ -174,8 +174,10 @@ class CmdGiveUp(default_cmds.MuxCommand):
         if outro_room:
             outro_room = outro_room[0]
         else:
-            self.caller.msg("That didn't work (seems like a bug). "
-                            "Try to use the |wteleport|n command instead.")
+            self.caller.msg(
+                "That didn't work (seems like a bug). "
+                "Try to use the |wteleport|n command instead."
+            )
             return
 
         self.caller.move_to(outro_room)
@@ -207,7 +209,7 @@ class Room(DefaultRoom, Object):
 
     See examples/object.py for a list of
     properties and methods available on all Objects.
-    
+
     This is the base room type for all rooms in Druidia.
     """
 
@@ -217,9 +219,9 @@ class Room(DefaultRoom, Object):
 
     def at_object_receive(self, new_arrival, source_location):
         """
-        When an object enters a room we tell other objects in the room 
-        about it by trying to call a hook on them. The Mob object uses 
-        this to cheaply get notified of enemies without having to 
+        When an object enters a room we tell other objects in the room
+        about it by trying to call a hook on them. The Mob object uses
+        this to cheaply get notified of enemies without having to
         constantly scan for them.
 
         Args:
@@ -311,9 +313,9 @@ class WeatherRoom(Room):
         # "update_weather" on this object. The interval is randomized
         # so as to not have all weather rooms update at the same time.
         self.db.interval = random.randint(50, 70)
-        TICKER_HANDLER.add(interval=self.db.interval,
-                           callback=self.update_weather,
-                           idstring="druidia")
+        TICKER_HANDLER.add(
+            interval=self.db.interval, callback=self.update_weather, idstring="druidia"
+        )
 
     def update_weather(self, *args, **kwargs):
         """
@@ -332,7 +334,8 @@ SUPERUSER_WARNING = (
     "\nWARNING: You are playing as a superuser ({name}). Use the {quell} command to\n"
     "play without superuser privileges (many functions and puzzles ignore the \n"
     "presence of a superuser, making this mode useful for exploring things behind \n"
-    "the scenes later).\n")
+    "the scenes later).\n"
+)
 
 # ------------------------------------------------------------
 #
@@ -401,8 +404,9 @@ class IntroRoom(Room):
 
         if character.is_superuser:
             string = "-" * 78 + SUPERUSER_WARNING + "-" * 78
-            character.msg("|r%s|n" %
-                          string.format(name=character.key, quell="|wquell|r"))
+            character.msg(
+                "|r%s|n" % string.format(name=character.key, quell="|wquell|r")
+            )
         else:
             # quell user
             if character.account:
@@ -462,15 +466,14 @@ class CmdEast(Command):
             if eexit:
                 caller.move_to(eexit[0])
             else:
-                caller.msg(
-                    "No east exit was found for this room. Contact an admin.")
+                caller.msg("No east exit was found for this room. Contact an admin.")
             return
         caller.db.tutorial_bridge_position = bridge_step
         # since we are really in one room, we have to notify others
         # in the room when we move.
-        caller.location.msg_contents("%s steps eastwards across the bridge." %
-                                     caller.name,
-                                     exclude=caller)
+        caller.location.msg_contents(
+            "%s steps eastwards across the bridge." % caller.name, exclude=caller
+        )
         caller.execute_cmd("look")
 
 
@@ -510,15 +513,14 @@ class CmdWest(Command):
             if wexit:
                 caller.move_to(wexit[0])
             else:
-                caller.msg(
-                    "No west exit was found for this room. Contact an admin.")
+                caller.msg("No west exit was found for this room. Contact an admin.")
             return
         caller.db.tutorial_bridge_position = bridge_step
         # since we are really in one room, we have to notify others
         # in the room when we move.
-        caller.location.msg_contents("%s steps westwards across the bridge." %
-                                     caller.name,
-                                     exclude=caller)
+        caller.location.msg_contents(
+            "%s steps westwards across the bridge." % caller.name, exclude=caller
+        )
         caller.execute_cmd("look")
 
 
@@ -553,7 +555,8 @@ FALL_MESSAGE = (
     "Suddenly the plank you stand on gives way under your feet! You fall!"
     "\nYou try to grab hold of an adjoining plank, but all you manage to do is to "
     "divert your fall westwards, towards the cliff face. This is going to hurt ... "
-    "\n ... The world goes dark ...\n\n")
+    "\n ... The world goes dark ...\n\n"
+)
 
 
 class CmdLookBridge(Command):
@@ -585,28 +588,32 @@ class CmdLookBridge(Command):
         )
 
         chars = [
-            obj for obj in self.obj.contents_get(exclude=caller)
-            if obj.has_account
+            obj for obj in self.obj.contents_get(exclude=caller) if obj.has_account
         ]
         if chars:
             # we create the You see: message manually here
-            message += "\n You see: %s" % ", ".join("|c%s|n" % char.key
-                                                    for char in chars)
+            message += "\n You see: %s" % ", ".join(
+                "|c%s|n" % char.key for char in chars
+            )
         self.caller.msg(message)
 
         # there is a chance that we fall if we are on the western or central
         # part of the bridge.
-        if bridge_position < 3 and random.random(
-        ) < 0.05 and not self.caller.is_superuser:
+        if (
+            bridge_position < 3
+            and random.random() < 0.05
+            and not self.caller.is_superuser
+        ):
             # we fall 5% of time.
             fall_exit = search_object(self.obj.db.fall_exit)
             if fall_exit:
                 self.caller.msg("|r%s|n" % FALL_MESSAGE)
                 self.caller.move_to(fall_exit[0], quiet=True)
                 # inform others on the bridge
-                self.obj.msg_contents("A plank gives way under %s's feet and "
-                                      "they fall from the bridge!" %
-                                      self.caller.key)
+                self.obj.msg_contents(
+                    "A plank gives way under %s's feet and "
+                    "they fall from the bridge!" % self.caller.key
+                )
 
 
 # Custom help command.
@@ -622,9 +629,11 @@ class CmdBridgeHelp(Command):
 
     def func(self):
         """Implements the command."""
-        string = ("You are trying hard not to fall off the bridge ..."
-                  "\n\nWhat you can do is trying to cross the bridge |weast|n"
-                  " or try to get back to the mainland |wwest|n).")
+        string = (
+            "You are trying hard not to fall off the bridge ..."
+            "\n\nWhat you can do is trying to cross the bridge |weast|n"
+            " or try to get back to the mainland |wwest|n)."
+        )
         self.caller.msg(string)
 
 
@@ -724,7 +733,8 @@ class BridgeRoom(WeatherRoom):
             if not (wexit and eexit and fexit):
                 character.msg(
                     "The bridge's exits are not properly configured. "
-                    "Contact an admin. Forcing west-end placement.")
+                    "Contact an admin. Forcing west-end placement."
+                )
                 character.db.tutorial_bridge_position = 0
                 return
             if source_location == eexit[0]:
@@ -770,13 +780,15 @@ DARK_MESSAGES = (
 
 ALREADY_LIGHTSOURCE = (
     "You don't want to stumble around in blindness anymore. You already "
-    "found what you need. Let's get light already!")
+    "found what you need. Let's get light already!"
+)
 
 FOUND_LIGHTSOURCE = (
     "Your fingers bump against a splinter of wood in a corner."
     " It smells of resin and seems dry enough to burn! "
     "You pick it up, holding it firmly. Now you just need to"
-    " |wlight|n it using the flint and steel you carry with you.")
+    " |wlight|n it using the flint and steel you carry with you."
+)
 
 
 class CmdLookDark(Command):
@@ -816,8 +828,9 @@ class CmdLookDark(Command):
             caller.ndb.dark_searches += 1
         else:
             # we could have found something!
-            if any(obj for obj in caller.contents
-                   if utils.inherits_from(obj, LightSource)):
+            if any(
+                obj for obj in caller.contents if utils.inherits_from(obj, LightSource)
+            ):
                 #  we already carry a LightSource object.
                 caller.msg(ALREADY_LIGHTSOURCE)
             else:
@@ -862,7 +875,8 @@ class CmdDarkNoMatch(Command):
         """Implements the command."""
         self.caller.msg(
             "Until you find some light, there's not much you can do. "
-            "Try feeling around, maybe you'll find something helpful!")
+            "Try feeling around, maybe you'll find something helpful!"
+        )
 
 
 class DarkCmdSet(CmdSet):
@@ -899,7 +913,7 @@ class DarkRoom(Room):
     The is_lit Attribute is used to define if the room is currently lit
     or not, so as to properly echo state changes.
 
-    Since this room is meant as a sort of catch-all, we also make sure 
+    Since this room is meant as a sort of catch-all, we also make sure
     to heal characters ending up here.
     """
 
@@ -928,8 +942,11 @@ class DarkRoom(Room):
         if there is a light-giving object in the room overall (like if
         a splinter was dropped in the room)
         """
-        return (obj.is_superuser or obj.db.is_giving_light
-                or any(o for o in obj.contents if o.db.is_giving_light))
+        return (
+            obj.is_superuser
+            or obj.db.is_giving_light
+            or any(o for o in obj.contents if o.db.is_giving_light)
+        )
 
     def _heal(self, character):
         """
@@ -948,9 +965,7 @@ class DarkRoom(Room):
         Args:
             exclude (Object): An object to not include in the light check.
         """
-        if any(
-                self._carries_light(obj) for obj in self.contents
-                if obj != exclude):
+        if any(self._carries_light(obj) for obj in self.contents if obj != exclude):
             self.locks.add("view:all()")
             self.cmdset.remove(DarkCmdSet)
             self.db.is_lit = True
@@ -1046,19 +1061,20 @@ class TeleportRoom(Room):
             return
         # determine if the puzzle is a success or not
         is_success = str(character.db.puzzle_clue) == str(self.db.puzzle_value)
-        teleport_to = self.db.success_teleport_to if is_success else self.db.failure_teleport_to
+        teleport_to = (
+            self.db.success_teleport_to if is_success else self.db.failure_teleport_to
+        )
         # note that this returns a list
         results = search_object(teleport_to)
         if not results or len(results) > 1:
             # we cannot move anywhere since no valid target was found.
-            character.msg("no valid teleport target for %s was found." %
-                          teleport_to)
+            character.msg("no valid teleport target for %s was found." % teleport_to)
             return
         if character.is_superuser:
             # superusers don't get teleported
             character.msg(
-                "Superuser block: You would have been teleported to %s." %
-                results[0])
+                "Superuser block: You would have been teleported to %s." % results[0]
+            )
             return
         # perform the teleport
         if is_success:
