@@ -14,7 +14,8 @@ from evennia import TICKER_HANDLER
 from evennia import CmdSet, Command, DefaultRoom
 from evennia import utils, create_object, search_object
 from evennia import syscmdkeys, default_cmds
-from .objects import LightSource
+
+#from typeclasses.menus.intro_menu import init_menu
 
 # the system error-handling module is defined in the settings. We load the
 # given setting here using utils.object_from_module. This way we can use
@@ -352,7 +353,7 @@ class CmdEvenniaIntro(Command):
     key = "intro"
 
     def func(self):
-        from .intro_menu import init_menu
+        from typeclasses.menus.intro_menu import init_menu
 
         # quell also superusers
         if self.caller.account:
