@@ -195,7 +195,7 @@ class RoomCmdSet(CmdSet):
         self.add(CmdGiveUp())
 
 
-class Room(DefaultRoom, Object):
+class Room(DefaultRoom):
     """
     Rooms are like any Object, except their location is None
     (which is default). They also use basetype_setup() to
