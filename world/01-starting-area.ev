@@ -56,7 +56,7 @@
 @tel #2
 #
 @dig/teleport Introduction;dru#01
- : rooms.IntroRoom
+ : typeclasses.customrooms.introoutro.IntroRoom
  = Druidia
 #
 @dig/teleport Apartment;dru#02
@@ -84,7 +84,7 @@
 @open up,down = dru#06
 #
 @dig Leaving Druidia;dru#08
- : rooms.OutroRoom
+ : typeclasses.customrooms.introoutro.OutroRoom
  = Leaving Druidia;leaving;quit;big ol quitter
 #
 pull door
@@ -243,7 +243,7 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop evacuation route;evac;evacuation;route : objects.Readable
+@create/drop evacuation route;evac;evacuation;route : typeclasses.scenery.readable.Readable
 #
 @desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 
@@ -419,7 +419,7 @@ The world turns black.
 #
 # give the enemy a silly weapon
 #
-@create toe nail clipper;toe;nail;clipper:objects.Weapon
+@create toe nail clipper;toe;nail;clipper:typeclasses.weapons.edged.Weapon
 #
 # Make the enemy's weapon good - hits at 70% of attacks, but not good at parrying.
 #
@@ -502,7 +502,7 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop evacuation route;evac;evacuation;route : objects.Readable
+@create/drop evacuation route;evac;evacuation;route : typeclasses.scenery.readable.Readable
 #
 @desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 

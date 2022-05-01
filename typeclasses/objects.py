@@ -7,11 +7,9 @@ descend from this typeclass.
 
 """
 
-import random
 
-from evennia import DefaultObject, DefaultExit, Command, CmdSet
-from evennia.utils import search, delay, dedent
-from evennia.prototypes.spawner import spawn
+from evennia import DefaultObject
+
 
 # -------------------------------------------------------------
 #
@@ -26,10 +24,6 @@ from evennia.prototypes.spawner import spawn
 # character's inventory when leaving Druidia, for example.
 #
 # -------------------------------------------------------------
-
-
-from evennia import DefaultObject
-
 
 class Object(DefaultObject):
     """

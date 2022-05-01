@@ -14,11 +14,9 @@
 # -------------------------------------------------------------
 
 
-from evennia import CmdSet, Command
-from evennia import utils, create_object, search_object
-from evennia import syscmdkeys, default_cmds
+from evennia import CmdSet, Command, search_object, syscmdkeys, default_cmds
 
-from typeclasses.base import Room
+from typeclasses.rooms import Room
 
 
 class TeleportRoom(Room):

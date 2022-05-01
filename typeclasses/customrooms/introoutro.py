@@ -1,8 +1,6 @@
 from evennia import CmdSet, Command
-from evennia import utils, create_object, search_object
-from evennia import syscmdkeys, default_cmds
 
-from typeclasses.base import Room
+from typeclasses.rooms import Room
 from typeclasses.menus.intro_menu import init_menu
 
 

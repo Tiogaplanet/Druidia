@@ -6,12 +6,13 @@ object based on that mobile class.
 """
 
 import random
-from typeclasses.objects import Object
 
 from evennia import TICKER_HANDLER
 from evennia import search_object
 from evennia import Command, CmdSet
 from evennia import logger
+
+from typeclasses.objects import Object
 
 
 class CmdMobOnOff(Command):

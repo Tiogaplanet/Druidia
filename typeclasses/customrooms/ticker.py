@@ -6,10 +6,8 @@
 
 
 import random
-from evennia import TICKER_HANDLER
-from evennia import CmdSet
-from evennia import utils, create_object, search_object
-from evennia import syscmdkeys, default_cmds
+
+from evennia import TICKER_HANDLER, CmdSet, search_object
 
 from typeclasses.base import Room
 

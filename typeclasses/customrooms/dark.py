@@ -10,12 +10,10 @@
 
 
 import random
-from evennia import TICKER_HANDLER
-from evennia import CmdSet, Command
-from evennia import utils, create_object, search_object
-from evennia import syscmdkeys, default_cmds
+from evennia import CmdSet, Command, utils, create_object, syscmdkeys, default_cmds
 
-from typeclasses.room import Room
+
+from typeclasses.rooms import Room
 from typeclasses.widgets.lights import LightSource
 
 
