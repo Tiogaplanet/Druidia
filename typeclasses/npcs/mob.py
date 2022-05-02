@@ -6,7 +6,7 @@ object based on that mobile class.
 """
 
 import random
-from typeclasses.objects import Object
+from typeclasses.base import Object
 
 from evennia import TICKER_HANDLER
 from evennia import search_object

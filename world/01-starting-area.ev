@@ -56,41 +56,41 @@
 @tel #2
 #
 @dig/teleport Introduction;dru#01
- : rooms.IntroRoom
+ : typeclasses.rooms.introoutro.IntroRoom
  = Druidia
 #
 @dig/teleport Apartment;dru#02
- : rooms.Room
+ : typeclasses.base.Room
  = begin adventure;begin;start
 #
 @dig Water Closet;dru#03
- : rooms.Room
+ : typeclasses.base.Room
  = sliding door;sliding,sliding door;sliding
 #
 @dig/teleport Hallway;dru#04
- : rooms.Room
+ : typeclasses.base.Room
  = apartment door;apartment,apartment door;apartment
 #
 @open wooden door;wooden = #2
 #
 @dig Neighbor's Apartment;dru#05
- : rooms.Room
+ : typeclasses.base.Room
  = stuck door;stuck,stuck door;stuck
 #
 @dig/teleport Stairs;dru#06
- : rooms.Room
+ : typeclasses.base.Room
  = push door;push,pull door;pull
 #
 @open up,down = dru#06
 #
 @dig Leaving Druidia;dru#08
- : rooms.OutroRoom
+ : typeclasses.rooms.introoutro.OutroRoom
  = Leaving Druidia;leaving;quit;big ol quitter
 #
 pull door
 #
 @dig Elevator;dru#07
- : rooms.Room
+ : typeclasses.base.Room
  = elevator doors;elevator,elevator doors;elevator
 #
 #-----------------------------------------------------------------------
@@ -243,7 +243,7 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop evacuation route;evac;evacuation;route : objects.Readable
+@create/drop evacuation route;evac;evacuation;route : typeclasses.scenery.readable.Readable
 #
 @desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 
@@ -419,7 +419,7 @@ The world turns black.
 #
 # give the enemy a silly weapon
 #
-@create toe nail clipper;toe;nail;clipper:objects.Weapon
+@create toe nail clipper;toe;nail;clipper:typeclasses.weapons.edged.Weapon
 #
 # Make the enemy's weapon good - hits at 70% of attacks, but not good at parrying.
 #
@@ -502,7 +502,7 @@ Peachtrees. I wouldn't take it if I were you.
 #
 # To meet building code, show an evacuation route.
 #
-@create/drop evacuation route;evac;evacuation;route : objects.Readable
+@create/drop evacuation route;evac;evacuation;route : typeclasses.scenery.readable.Readable
 #
 @desc evacuation route =
  The evacuation route is engraved on sheet steel and secured to the 

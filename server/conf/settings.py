@@ -34,6 +34,21 @@ from evennia.settings_default import *
 # This is the name of your game. Make it catchy!
 SERVERNAME = "Druidia"
 
+# Typeclass for account objects (linked to a character) (fallback)
+BASE_ACCOUNT_TYPECLASS = "typeclasses.base.Account"
+# Typeclass for Channel (fallback).
+#BASE_CHANNEL_TYPECLASS = "typeclasses.base.Channel"
+# Typeclass for Exit objects (fallback).
+BASE_EXIT_TYPECLASS = "typeclasses.base.Exit"
+# Typeclass for character objects linked to an account (fallback)
+BASE_CHARACTER_TYPECLASS = "typeclasses.base.Character"
+# Typeclass and base for all objects (fallback)
+BASE_OBJECT_TYPECLASS = "typeclasses.base.Object"
+# Typeclass for rooms (fallback)
+BASE_ROOM_TYPECLASS = "typeclasses.base.Room"
+# Typeclass for Scripts (fallback). You usually don't need to change this
+# but create custom variations of scripts on a per-case basis instead.
+BASE_SCRIPT_TYPECLASS = "typeclasses.base.Script"
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
