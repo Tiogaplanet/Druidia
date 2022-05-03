@@ -14,9 +14,9 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 
 """
 
+
 from evennia import default_cmds
 
-from commands.command import CmdWhistle
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -35,7 +35,6 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-        self.add(CmdWhistle())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
