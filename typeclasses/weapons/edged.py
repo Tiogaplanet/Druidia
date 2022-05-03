@@ -17,7 +17,7 @@
 from evennia import CmdSet
 
 from commands.command import Command
-from typeclasses.objects import Object
+from typeclasses.base import Object
 
 
 class CmdAttack(Command):

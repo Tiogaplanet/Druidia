@@ -13,8 +13,6 @@ from evennia import search_object
 from evennia import Command, CmdSet
 from evennia import logger
 
-from typeclasses.objects import Object
-
 
 class CmdMobOnOff(Command):
     """
