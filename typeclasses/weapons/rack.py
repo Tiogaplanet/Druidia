@@ -217,7 +217,9 @@ class WeaponRack(Object):
             prototype = random.choice(self.db.available_weapons)
             # use the spawner to create a new Weapon from the
             # spawner dictionary, tag the caller
-            wpn = spawn(WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES)[0]
+            wpn = spawn(
+                WEAPON_PROTOTYPES[prototype], prototype_parents=WEAPON_PROTOTYPES
+            )[0]
             caller.tags.add(rack_id, category="world")
             wpn.location = caller
             caller.msg(self.db.get_weapon_msg % wpn.key)

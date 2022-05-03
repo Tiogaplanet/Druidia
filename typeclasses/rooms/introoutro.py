@@ -20,9 +20,10 @@ SUPERUSER_WARNING = (
     "\nWARNING: You are playing as a superuser ({name}). Use the {quell} command to\n"
     "play without superuser privileges (many functions and puzzles ignore the \n"
     "presence of a superuser, making this mode useful for exploring things behind \n"
-    "the scenes later).\n")
-    
-    
+    "the scenes later).\n"
+)
+
+
 class CmdEvenniaIntro(Command):
     """
     Start the Evennia intro wizard.
@@ -78,8 +79,9 @@ class IntroRoom(Room):
 
         if character.is_superuser:
             string = "-" * 78 + SUPERUSER_WARNING + "-" * 78
-            character.msg("|r%s|n" %
-                          string.format(name=character.key, quell="|wquell|r"))
+            character.msg(
+                "|r%s|n" % string.format(name=character.key, quell="|wquell|r")
+            )
         else:
             # quell user
             if character.account:

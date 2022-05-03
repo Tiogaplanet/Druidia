@@ -35,8 +35,8 @@ class CmdSetSpoon(CmdSet):
         Called when the cmdset is created.
         """
         self.add(CmdBend())
-        
-        
+
+
 class Spoon(Object):
     """
     This simple object is a spoon (or is it?).

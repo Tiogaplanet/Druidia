@@ -35,13 +35,15 @@ DARK_MESSAGES = (
 
 ALREADY_LIGHTSOURCE = (
     "You don't want to stumble around in blindness anymore. You already "
-    "found what you need. Let's get light already!")
+    "found what you need. Let's get light already!"
+)
 
 FOUND_LIGHTSOURCE = (
     "Your fingers bump against a splinter of wood in a corner."
     " It smells of resin and seems dry enough to burn! "
     "You pick it up, holding it firmly. Now you just need to"
-    " |wlight|n it using the flint and steel you carry with you.")
+    " |wlight|n it using the flint and steel you carry with you."
+)
 
 
 class CmdLookDark(Command):
@@ -81,8 +83,9 @@ class CmdLookDark(Command):
             caller.ndb.dark_searches += 1
         else:
             # we could have found something!
-            if any(obj for obj in caller.contents
-                   if utils.inherits_from(obj, LightSource)):
+            if any(
+                obj for obj in caller.contents if utils.inherits_from(obj, LightSource)
+            ):
                 #  we already carry a LightSource object.
                 caller.msg(ALREADY_LIGHTSOURCE)
             else:
@@ -127,7 +130,8 @@ class CmdDarkNoMatch(Command):
         """Implements the command."""
         self.caller.msg(
             "Until you find some light, there's not much you can do. "
-            "Try feeling around, maybe you'll find something helpful!")
+            "Try feeling around, maybe you'll find something helpful!"
+        )
 
 
 class DarkCmdSet(CmdSet):
@@ -164,7 +168,7 @@ class DarkRoom(Room):
     The is_lit Attribute is used to define if the room is currently lit
     or not, so as to properly echo state changes.
 
-    Since this room is meant as a sort of catch-all, we also make sure 
+    Since this room is meant as a sort of catch-all, we also make sure
     to heal characters ending up here.
     """
 
@@ -193,8 +197,11 @@ class DarkRoom(Room):
         if there is a light-giving object in the room overall (like if
         a splinter was dropped in the room)
         """
-        return (obj.is_superuser or obj.db.is_giving_light
-                or any(o for o in obj.contents if o.db.is_giving_light))
+        return (
+            obj.is_superuser
+            or obj.db.is_giving_light
+            or any(o for o in obj.contents if o.db.is_giving_light)
+        )
 
     def _heal(self, character):
         """
@@ -213,9 +220,7 @@ class DarkRoom(Room):
         Args:
             exclude (Object): An object to not include in the light check.
         """
-        if any(
-                self._carries_light(obj) for obj in self.contents
-                if obj != exclude):
+        if any(self._carries_light(obj) for obj in self.contents if obj != exclude):
             self.locks.add("view:all()")
             self.cmdset.remove(DarkCmdSet)
             self.db.is_lit = True
