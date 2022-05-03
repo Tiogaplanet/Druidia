@@ -102,7 +102,7 @@ class Guest(DefaultGuest):
     """
 
     pass
-    
+
 
 """
 Exits
@@ -215,8 +215,8 @@ class Object(DefaultObject):
     def reset(self):
         """Resets the object, whatever that may mean."""
         self.location = self.home
-    
-        
+
+
 """
 
 Room typeclasses for Druidia.
