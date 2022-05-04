@@ -15,7 +15,7 @@ from evennia import CmdSet, Command
 from evennia import utils, create_object, search_object
 from evennia import syscmdkeys, default_cmds
 
-from typeclasses.room import Room
+from typeclasses.base import Room
 from typeclasses.widgets.lights import LightSource
 
 

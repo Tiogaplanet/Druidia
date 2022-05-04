@@ -19,7 +19,7 @@
 from evennia import CmdSet
 
 from commands.command import Command
-from typeclasses.object import Object
+from typeclasses.base import Object
 
 
 class CmdLight(Command):
