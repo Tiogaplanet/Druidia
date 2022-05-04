@@ -3,7 +3,7 @@ from evennia import create_object
 from evennia.commands.default.tests import CommandTest
 
 from typeclasses import base as drubase
-
+from typeclasses.rooms import ticker as druticker
 
 class TestRoom(CommandTest):
     def test_room(self):
@@ -17,4 +17,13 @@ class TestRoom(CommandTest):
         )
         self.call(drubase.CmdLook(), "detail", "A detail", obj=room)
         self.call(drubase.CmdLook(), "foo", "A detail", obj=room)
+        room.delete()
+
+    def test_weatherroom(self):
+        room = create_object(druticker.WeatherRoom, key="weatherroom")
+        room.update_weather()
+        druticker.TICKER_HANDLER.remove(
+            # The idstring needs to match the idstring in WeatherRoom typclass.
+            interval=room.db.interval, callback=room.update_weather, idstring="druidia"
+        )
         room.delete()
