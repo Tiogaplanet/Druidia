@@ -1,4 +1,4 @@
-# test tutorial_world/
+# Test Druidia's rooms.
 from evennia import create_object
 from evennia.commands.default.tests import CommandTest
 
@@ -7,6 +7,7 @@ from typeclasses.rooms import ticker as druticker
 from typeclasses.rooms import introoutro as druintro
 from typeclasses.rooms import dark as drudark
 from typeclasses.rooms import teleports as drutele
+
 
 class TestRoom(CommandTest):
     def test_room(self):
