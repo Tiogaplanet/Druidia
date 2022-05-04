@@ -4,6 +4,7 @@ from evennia.commands.default.tests import CommandTest
 
 from typeclasses import base as drubase
 from typeclasses.rooms import ticker as druticker
+from typeclasses.rooms import introoutro as druintro
 
 class TestRoom(CommandTest):
     def test_room(self):
@@ -27,3 +28,7 @@ class TestRoom(CommandTest):
             interval=room.db.interval, callback=room.update_weather, idstring="druidia"
         )
         room.delete()
+
+    def test_introroom(self):
+        room = create_object(druintro.IntroRoom, key="introroom")
+        room.at_object_receive(self.char1, self.room1)
