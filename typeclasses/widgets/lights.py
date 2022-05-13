@@ -17,6 +17,7 @@
 
 
 from evennia import CmdSet
+from evennia.utils import delay
 
 from commands.command import Command
 from typeclasses.base import Object
