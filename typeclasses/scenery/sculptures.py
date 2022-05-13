@@ -11,7 +11,11 @@
 # -------------------------------------------------------------
 
 
-from typeclasses.objects import Object
+import random
+
+from evennia.utils import delay
+
+from typeclasses.base import Object
 
 
 class Obelisk(Object):

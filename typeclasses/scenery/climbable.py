@@ -14,7 +14,7 @@
 from evennia import CmdSet
 
 from commands.command import Command
-from typeclasses.objects import Object
+from typeclasses.base import Object
 
 
 class CmdClimb(Command):
@@ -51,7 +51,7 @@ class CmdClimb(Command):
             )
         self.caller.msg(ostring)
         # set a tag on the caller to remember that we climbed.
-        self.caller.tags.add("tutorial_climbed_tree", category="world")
+        self.caller.tags.add("climbed_tree", category="world")
 
 
 class CmdSetClimbable(CmdSet):
