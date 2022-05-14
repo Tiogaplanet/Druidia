@@ -1,4 +1,4 @@
-#  test tutorial_world/objects
+#  Test typeclasses/widgets.
 
 
 from evennia import create_object

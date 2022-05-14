@@ -12,7 +12,11 @@
 # -------------------------------------------------------------
 
 
+import random
+
 from evennia import CmdSet
+from evennia.utils import dedent
+from evennia.prototypes.spawner import spawn
 
 from commands.command import Command
 from typeclasses.base import Object
