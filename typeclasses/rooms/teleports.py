@@ -58,19 +58,20 @@ class TeleportRoom(Room):
             return
         # determine if the puzzle is a success or not
         is_success = str(character.db.puzzle_clue) == str(self.db.puzzle_value)
-        teleport_to = self.db.success_teleport_to if is_success else self.db.failure_teleport_to
+        teleport_to = (
+            self.db.success_teleport_to if is_success else self.db.failure_teleport_to
+        )
         # note that this returns a list
         results = search_object(teleport_to)
         if not results or len(results) > 1:
             # we cannot move anywhere since no valid target was found.
-            character.msg("no valid teleport target for %s was found." %
-                          teleport_to)
+            character.msg("no valid teleport target for %s was found." % teleport_to)
             return
         if character.is_superuser:
             # superusers don't get teleported
             character.msg(
-                "Superuser block: You would have been teleported to %s." %
-                results[0])
+                "Superuser block: You would have been teleported to %s." % results[0]
+            )
             return
         # perform the teleport
         if is_success:

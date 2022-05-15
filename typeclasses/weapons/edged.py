@@ -2,17 +2,19 @@
 #
 # Weapon - object type
 #
-# A weapon (which here is assumed to be a bladed melee weapon for close 
-# combat) has three commands, stab, slash and defend. Weapons also have 
-# a property "magic" to determine if they are usable against certain 
+# A weapon (which here is assumed to be a bladed melee weapon for close
+# combat) has three commands, stab, slash and defend. Weapons also have
+# a property "magic" to determine if they are usable against certain
 # enemies.
 #
-# Since Characters don't have special skills (yet), we let the weapon 
-# itself determine how easy/hard it is to hit with it, and how much 
+# Since Characters don't have special skills (yet), we let the weapon
+# itself determine how easy/hard it is to hit with it, and how much
 # damage it can do.
 #
 # -------------------------------------------------------------
 
+
+import random
 
 from evennia import CmdSet
 
@@ -61,15 +63,15 @@ class CmdAttack(Command):
         cmdstring = self.cmdstring
 
         if cmdstring in ("attack", "fight"):
-            string = "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            string = (
+                "How do you want to fight? Choose one of 'stab', 'slash' or 'defend'."
+            )
             self.caller.msg(string)
             return
 
         # parry mode
         if cmdstring in ("parry", "defend"):
-            string = (
-                "You raise your weapon in a defensive pose, ready to block the next enemy attack."
-            )
+            string = "You raise your weapon in a defensive pose, ready to block the next enemy attack."
             self.caller.msg(string)
             self.caller.db.combat_parry_mode = True
             self.caller.location.msg_contents(
@@ -89,14 +91,22 @@ class CmdAttack(Command):
             damage = self.obj.db.damage * 2  # modified due to stab
             string = "You stab with %s. " % self.obj.key
             tstring = "%s stabs at you with %s. " % (self.caller.key, self.obj.key)
-            ostring = "%s stabs at %s with %s. " % (self.caller.key, target.key, self.obj.key)
+            ostring = "%s stabs at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         elif cmdstring in ("slash", "chop", "bash"):
             hit = float(self.obj.db.hit)  # un modified due to slash
             damage = self.obj.db.damage  # un modified due to slash
             string = "You slash with %s. " % self.obj.key
             tstring = "%s slash at you with %s. " % (self.caller.key, self.obj.key)
-            ostring = "%s slash at %s with %s. " % (self.caller.key, target.key, self.obj.key)
+            ostring = "%s slash at %s with %s. " % (
+                self.caller.key,
+                target.key,
+                self.obj.key,
+            )
             self.caller.db.combat_parry_mode = False
         else:
             self.caller.msg(
@@ -134,7 +144,9 @@ class CmdAttack(Command):
         else:
             self.caller.msg(string + "|rYou miss.|n")
             target.msg(tstring + "|gThey miss you.|n")
-            self.caller.location.msg_contents(ostring + "They miss.", exclude=[target, self.caller])
+            self.caller.location.msg_contents(
+                ostring + "They miss.", exclude=[target, self.caller]
+            )
 
 
 class CmdSetWeapon(CmdSet):

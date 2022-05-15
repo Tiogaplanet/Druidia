@@ -17,11 +17,6 @@ class CmdBend(Command):
     help_category = "world"
 
     def func(self):
-        """
-        Implements the read command. This simply looks for an
-        Attribute "readable_text" on the object and displays that.
-        """
-
         self.caller.msg("There is no spoon.")
 
 
@@ -35,8 +30,8 @@ class CmdSetSpoon(CmdSet):
         Called when the cmdset is created.
         """
         self.add(CmdBend())
-        
-        
+
+
 class Spoon(Object):
     """
     This simple object is a spoon (or is it?).

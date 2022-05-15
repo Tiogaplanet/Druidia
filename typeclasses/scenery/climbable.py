@@ -45,10 +45,13 @@ class CmdClimb(Command):
             return
         ostring = self.obj.db.climb_text
         if not ostring:
-            ostring = "You climb %s. Having looked around, you climb down again." % self.obj.name
+            ostring = (
+                "You climb %s. Having looked around, you climb down again."
+                % self.obj.name
+            )
         self.caller.msg(ostring)
         # set a tag on the caller to remember that we climbed.
-        self.caller.tags.add("tutorial_climbed_tree", category="world")
+        self.caller.tags.add("climbed_tree", category="world")
 
 
 class CmdSetClimbable(CmdSet):

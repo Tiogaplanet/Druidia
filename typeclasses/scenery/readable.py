@@ -47,8 +47,8 @@ class CmdRead(Command):
         else:
             string = "There is nothing to read on %s." % obj.key
         self.caller.msg(string)
-        
-        
+
+
 class CmdSetReadable(CmdSet):
     """
     A CmdSet for readables.
@@ -59,8 +59,8 @@ class CmdSetReadable(CmdSet):
         Called when the cmdset is created.
         """
         self.add(CmdRead())
-        
-        
+
+
 class Readable(Object):
     """
     This simple object defines some attributes and bestows some commands.

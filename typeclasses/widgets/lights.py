@@ -17,9 +17,10 @@
 
 
 from evennia import CmdSet
+from evennia.utils import delay
 
 from commands.command import Command
-from typeclasses.object import Object
+from typeclasses.base import Object
 
 
 class CmdLight(Command):
@@ -85,7 +86,9 @@ class LightSource(Object):
         self.db.burntime = 60 * 3  # 3 minutes
         # this is the default desc, it can of course be customized
         # when created.
-        self.db.desc = "A splinter of wood with remnants of resin on it, enough for burning."
+        self.db.desc = (
+            "A splinter of wood with remnants of resin on it, enough for burning."
+        )
         # add the Light command
         self.cmdset.add_default(CmdSetLight, permanent=True)
 
@@ -98,13 +101,16 @@ class LightSource(Object):
         self.db.is_giving_light = False
         try:
             self.location.location.msg_contents(
-                "%s's %s flickers and dies." % (self.location, self.key), exclude=self.location
+                "%s's %s flickers and dies." % (self.location, self.key),
+                exclude=self.location,
             )
             self.location.msg("Your %s flickers and dies." % self.key)
             self.location.location.check_light_state()
         except AttributeError:
             try:
-                self.location.msg_contents("A %s on the floor flickers and dies." % self.key)
+                self.location.msg_contents(
+                    "A %s on the floor flickers and dies." % self.key
+                )
                 self.location.location.check_light_state()
             except AttributeError:
                 # Mainly happens if we happen to be in a None location

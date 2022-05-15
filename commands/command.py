@@ -186,23 +186,3 @@ class Command(BaseCommand):
 #                 self.character = self.caller.get_puppet(self.session)
 #             else:
 #                 self.character = None
-
-
-from evennia import default_cmds
-class CmdWhistle(default_cmds.MuxCommand):
-    """
-    Whistle a little tune.
-
-    Usage:
-      whistle
-
-    The character whistles a cheerful little tune.
-    """
-
-    aliases = ["wh", "whi", "whis", "whist", "whistl"]
-
-    key = "whistle"
-
-    def func(self):
-        "This actually does things"
-        self.caller.msg("You whistle a cheerful tune.")

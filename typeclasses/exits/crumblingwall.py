@@ -27,10 +27,13 @@
 # position of the roots.
 
 
-from evennia import CmdSet
+import random
+
+from evennia import CmdSet, DefaultExit
+from evennia.utils import delay, search
 
 from commands.command import Command
-from typeclasses.object import Object
+from typeclasses.base import Object
 
 
 class CmdShiftRoot(Command):
@@ -117,7 +120,9 @@ class CmdShiftRoot(Command):
         elif color == "blue":
             if direction == "left":
                 root_pos[color] = max(-1, root_pos[color] - 1)
-                self.caller.msg("You shift the root with small blue flowers to the left.")
+                self.caller.msg(
+                    "You shift the root with small blue flowers to the left."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["red"]:
                     root_pos["red"] += 1
                     self.caller.msg(
@@ -125,7 +130,9 @@ class CmdShiftRoot(Command):
                     )
             elif direction == "right":
                 root_pos[color] = min(1, root_pos[color] + 1)
-                self.caller.msg("You shove the root adorned with small blue flowers to the right.")
+                self.caller.msg(
+                    "You shove the root adorned with small blue flowers to the right."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["red"]:
                     root_pos["red"] -= 1
                     self.caller.msg(
@@ -146,12 +153,18 @@ class CmdShiftRoot(Command):
                     self.caller.msg("The green weedy root falls down.")
             elif direction == "down":
                 root_pos[color] = min(1, root_pos[color] + 1)
-                self.caller.msg("You shove the root adorned with small yellow flowers downwards.")
+                self.caller.msg(
+                    "You shove the root adorned with small yellow flowers downwards."
+                )
                 if root_pos[color] != 0 and root_pos[color] == root_pos["green"]:
                     root_pos["green"] -= 1
-                    self.caller.msg("The weedy green root is shifted upwards to make room.")
+                    self.caller.msg(
+                        "The weedy green root is shifted upwards to make room."
+                    )
             else:
-                self.caller.msg("The root hangs across the wall - you can only move it up or down.")
+                self.caller.msg(
+                    "The root hangs across the wall - you can only move it up or down."
+                )
         elif color == "green":
             if direction == "up":
                 root_pos[color] = max(-1, root_pos[color] - 1)
@@ -168,7 +181,9 @@ class CmdShiftRoot(Command):
                         "The root with yellow flowers gets in the way and is pushed upwards."
                     )
             else:
-                self.caller.msg("The root hangs across the wall - you can only move it up or down.")
+                self.caller.msg(
+                    "The root hangs across the wall - you can only move it up or down."
+                )
 
         # we have moved the root. Store new position
         self.obj.db.root_pos = root_pos
@@ -177,7 +192,9 @@ class CmdShiftRoot(Command):
         if list(root_pos.values()).count(0) == 0:  # no roots in middle position
             # This will affect the cmd: lock of CmdPressButton
             self.obj.db.button_exposed = True
-            self.caller.msg("Holding aside the root you think you notice something behind it ...")
+            self.caller.msg(
+                "Holding aside the root you think you notice something behind it ..."
+            )
 
 
 class CmdPressButton(Command):
@@ -218,7 +235,9 @@ class CmdPressButton(Command):
         )
         self.caller.location.msg_contents(string % self.caller.key, exclude=self.caller)
         if not self.obj.open_wall():
-            self.caller.msg("The exit leads nowhere, there's just more stone behind it ...")
+            self.caller.msg(
+                "The exit leads nowhere, there's just more stone behind it ..."
+            )
 
 
 class CmdSetCrumblingWall(CmdSet):
@@ -373,7 +392,9 @@ class CrumblingWall(Object, DefaultExit):
 
     def at_failed_traverse(self, traverser):
         """This is called if the account fails to pass the Exit."""
-        traverser.msg("No matter how you try, you cannot force yourself through %s." % self.key)
+        traverser.msg(
+            "No matter how you try, you cannot force yourself through %s." % self.key
+        )
 
     def reset(self):
         """
