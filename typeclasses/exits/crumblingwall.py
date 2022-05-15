@@ -27,10 +27,13 @@
 # position of the roots.
 
 
-from evennia import CmdSet
+import random
+
+from evennia import CmdSet, DefaultExit
+from evennia.utils import delay, search
 
 from commands.command import Command
-from typeclasses.object import Object
+from typeclasses.base import Object
 
 
 class CmdShiftRoot(Command):
