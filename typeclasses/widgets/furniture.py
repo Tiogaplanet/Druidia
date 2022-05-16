@@ -1,7 +1,11 @@
+
+
 from evennia import CmdSet
+from evennia import search_object
 
 from commands.command import Command
 from typeclasses.base import Object
+from typeclasses.rooms.dream import DreamRoom
 
 
 class CmdSleep(Command):
@@ -17,23 +21,8 @@ class CmdSleep(Command):
     help_category = "world"
 
     def func(self):
-        self.caller.msg("You lay down on the bed and fall asleep.")
-
-
-class CmdWake(Command):
-    """
-    Usage:
-      wake
-
-    Wake from sleeping on the bed.
-    """
-
-    key = "wake"
-    locks = "cmd:all()"
-    help_category = "world"
-
-    def func(self):
-        self.caller.msg("You wake up feeling refreshed.")
+        self.caller.msg("You lay down on the bed and fall asleep.\nAfter an hour you begin to dream...")
+        self.caller.move_to(DreamRoom.objects.all()[0])
 
 
 class CmdSetBed(CmdSet):
@@ -46,7 +35,6 @@ class CmdSetBed(CmdSet):
         Called when the cmdset is created.
         """
         self.add(CmdSleep())
-        self.add(CmdWake())
 
 
 class Bed(Object):
