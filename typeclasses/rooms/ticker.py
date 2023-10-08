@@ -375,7 +375,7 @@ class BridgeRoom(WeatherRoom):
             # send a message most of the time
             self.msg_contents("|w%s|n" % random.choice(BRIDGE_WEATHER))
 
-    def at_object_receive(self, character, source_location):
+    def at_object_receive(self, character, source_location, move_type="move", **kwargs):
         """
         This hook is called by the engine whenever the player is moved
         into this room.

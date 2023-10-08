@@ -498,7 +498,7 @@ class Room(DefaultRoom):
         """Called when room is first created"""
         self.cmdset.add_default(RoomCmdSet)
 
-    def at_object_receive(self, new_arrival, source_location):
+    def at_object_receive(self, new_arrival, source_location, move_type="move", **kwargs):
         """
         When an object enters a room we tell other objects in the room
         about it by trying to call a hook on them. The Mob object uses

@@ -48,7 +48,7 @@ class TeleportRoom(Room):
         self.db.failure_teleport_msg = "You fail!"
         self.db.failure_teleport_to = "dark cell"
 
-    def at_object_receive(self, character, source_location):
+    def at_object_receive(self, character, source_location, move_type="move", **kwargs):
         """
         This hook is called by the engine whenever the player is moved into
         this room.
@@ -83,4 +83,4 @@ class TeleportRoom(Room):
         # we have to call this manually since we turn off move_hooks
         # - this is necessary to make the target dark room aware of an
         # already carried light.
-        results[0].at_object_receive(character, self)
+        results[0].at_object_receive(character, self, move_type="move", **kwargs)

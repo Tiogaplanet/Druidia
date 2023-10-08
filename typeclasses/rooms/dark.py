@@ -241,7 +241,7 @@ class DarkRoom(Room):
                     # put players in darkness
                     char.msg("The room is completely dark.")
 
-    def at_object_receive(self, obj, source_location):
+    def at_object_receive(self, obj, source_location, move_type="move", **kwargs):
         """
         Called when an object enters the room.
         """

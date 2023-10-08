@@ -65,7 +65,7 @@ class IntroRoom(Room):
         super().at_object_creation()
         self.cmdset.add(CmdSetEvenniaIntro, permanent=True)
 
-    def at_object_receive(self, character, source_location):
+    def at_object_receive(self, character, source_location, move_type="move", **kwargs):
         """
         Assign properties on characters
         """
@@ -113,7 +113,7 @@ class OutroRoom(Room):
         """
         super().at_object_creation()
 
-    def at_object_receive(self, character, source_location):
+    def at_object_receive(self, character, source_location, move_type="move", **kwargs):
         """
         Do cleanup.
         """
@@ -129,6 +129,6 @@ class OutroRoom(Room):
                     obj.delete()
             character.tags.clear(category="world")
 
-    def at_object_leave(self, character, destination):
+    def at_object_leave(self, character, destination, move_type="move", **kwargs):
         if character.account:
             character.account.execute_cmd("unquell")
