@@ -251,7 +251,7 @@ class DarkRoom(Room):
             # in case the new guy carries light with them
             self.check_light_state()
 
-    def at_object_leave(self, obj, target_location):
+    def at_object_leave(self, obj, target_location, move_type="move", **kwargs):
         """
         In case people leave with the light, we make sure to clear the
         DarkCmdSet if necessary.  This also works if they are

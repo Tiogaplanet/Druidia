@@ -401,7 +401,7 @@ class BridgeRoom(WeatherRoom):
                 character.db.tutorial_bridge_position = 0
             character.execute_cmd("look")
 
-    def at_object_leave(self, character, target_location):
+    def at_object_leave(self, character, target_location, move_type="move", **kwargs):
         """
         This is triggered when the player leaves the bridge room.
         """

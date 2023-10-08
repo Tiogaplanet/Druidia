@@ -1,12 +1,22 @@
 #
-# Evennia batchfile - dreamland
+# Druidia batchfile - Dreamland
 #
-# Griatch, Tiogaplanet 2011, 2015, 2022
+# Griatch, Tiogaplanet 2011, 2015, 2023
 #
+# This batchfile creates a tutorial area for players.  It is a direct
+# port of the tutorial world provided by the base Evennia system.  It is
+# adapted to work on the Druidia codebase.
+#
+# Load this file as user #1 with:
+#
+#     @batchcommand world.02-dreamland
+#
+# If you give the /interactive switch you can step through the
+# build process command for command.
 #
 # The area we are building looks like this:
 #
-#     
+#
 # +---+----+    +-------------------+    +--------+   +--------+
 # |        |    |                   |    |gate    |   |corner  |
 # | cliff  +----+   04 bridge       +----+  08    +---+   10   |
