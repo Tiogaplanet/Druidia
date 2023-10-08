@@ -7,7 +7,7 @@
 #
 # Load this file as user #1 with:
 #
-#     @batchcommand world.batch_cmds
+#     @batchcommand world.01-starting-area
 #
 # If you give the /interactive switch you can step through the
 # build process command for command.
